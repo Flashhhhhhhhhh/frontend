@@ -19,7 +19,7 @@ const Container = styled.div`
 const Logo = styled.img`
    margin-top: 1em;
    z-index: -1;
-   transition: all 0.3s ease;
+   transition: all 0.35s ease;
 
    ${props =>
       props.isHidden &&
@@ -32,10 +32,10 @@ const Logo = styled.img`
 const BackButton = styled.div`
    position: absolute;
    display: flex;
-   transition: all 0.3s ease;
-   margin-top: 10px;
+   transition: all 0.35s ease;
+   margin-top: 17px;
    color: white;
-   font-size: 35px;
+   font-size: 30px;
 
    h3 {
       z-index: -1;
@@ -45,7 +45,7 @@ const BackButton = styled.div`
    ${props =>
       props.index > 0 &&
       css`
-         animation: slideIn 0.3s;
+         animation: slideIn 0.35s;
       `};
 
    ${props =>
@@ -58,9 +58,13 @@ const BackButton = styled.div`
          cursor: pointer;
          z-index: 1;
 
+         h3 {
+            font-weight: 500;
+         }
+
          .caret {
             margin-right: 8px;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
          }
       `};
 
@@ -74,7 +78,7 @@ const BackButton = styled.div`
       props.goingBack &&
       props.isTitle &&
       css`
-         animation: slideOut 0.3s;
+         animation: slideOut 0.35s;
       `}
 
       ${props =>

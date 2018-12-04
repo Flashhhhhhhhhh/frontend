@@ -47,7 +47,7 @@ const initialState = {
 class MainView extends Component {
    static get metadata() {
       return {
-         name: "Uploader",
+         name: "Data Workbench",
          hideTitle: true,
       };
    }
