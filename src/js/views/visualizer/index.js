@@ -9,7 +9,7 @@ const Container = styled.div`
    flex: 1;
    flex-direction: column;
    align-items: center;
-   padding-top: 3.5em;
+   padding-top: 1em;
 `;
 
 const Title = styled.div`

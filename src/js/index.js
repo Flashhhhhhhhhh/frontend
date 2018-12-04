@@ -16,6 +16,7 @@ const View = styled.div`
    bottom: 0;
    transition: all 0.35s ease;
    background: #e9eef4;
+   overflow: auto;
 
    ${props =>
       props.index === props.numViews - 1 &&

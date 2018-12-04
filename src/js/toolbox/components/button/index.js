@@ -40,7 +40,7 @@ const Container = styled.div`
    `};
 
    ${props => props.theme === 'secondary' && css`
-      border: 1px solid ${color.gray[3]};
+      border: 1px solid ${color.gray[4]};
    `};
 `;
 
@@ -63,6 +63,7 @@ const TextContainer = styled.div`
    ${props => props.theme === "primary" && css`
       h2, h4 {
          color: white;
+         font-weight: 800;
          margin-left: 0;
       }
    `};

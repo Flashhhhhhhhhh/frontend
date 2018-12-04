@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
-import { FileInput } from "../../toolbox";
+import { FileInput, Button } from "../../toolbox";
 
 const Container = styled.div`
    display: flex;
@@ -23,24 +23,39 @@ const WelcomeContainer = styled.div`
    }
 `;
 
+const PreviewContainer = styled.div`
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: center;
+   height: 13em;
+
+   img {
+      max-height: 5em;
+   }
+`;
+
 const InputContainer = styled.div`
    height: 50vh;
    width: 70vw;
    max-width: 95%;
    display: flex;
    justify-content: center;
-   align-items: center;
+`;
+
+const Row = styled.div`
+   display: flex;
 `;
 
 const Text = styled.h3`
    margin: 0 auto;
    color: #2c4358;
    font-size: 23px;
-   font-weight: 300;
+   font-weight: 400;
 `;
 
 const initialState = {
-   currentFile: null,
+   curFile: null,
    loading: false
 };
 
@@ -48,43 +63,98 @@ class MainView extends Component {
    static get metadata() {
       return {
          name: "Data Workbench",
-         hideTitle: true,
+         hideTitle: true
       };
    }
 
-   state = initialState
+   constructor() {   
+      super();
+      this.state = initialState;
+   }
 
-   handleFile(file) {
+   makeRequest = ({ url, data }) => {
+      return new Promise(function(resolve, reject) {
+         fetch(url)
+            .then(response => {
+               console.log(response);
+               response.json().then(data => {
+                  if (response.status >= 300) {
+                     reject(data.message);
+                  }
+                  resolve(data);
+               });
+            })
+            .catch(e => {
+               reject(Error(e));
+            });
+      });
+   }
+
+   handleFile = (file) => {
       this.setState({ loading: true });
-      setTimeout(() => {
-         this.props.pushView({
-            name: "VisualizerView",
-            props: {
-               dataset: {
-                  name: "hello.csv"
-               }
-            }
-         });
+      const url =
+         "http://ec2-52-87-248-236.compute-1.amazonaws.com:5000/test/test";
+      this.makeRequest({ url }).then(response => {
          setTimeout(() => {
-            this.setState(initialState);
-         }, 300);
-      }, 1500);
+            setTimeout(() => {
+               this.setState({ loading: false, curFile: file });
+            }, 300);
+         }, 3000);
+      });
+   }
+
+   reset = () => {
+      this.setState(initialState);
+   }
+
+   viewData = () => {
+      this.props.pushView({
+         name: "VisualizerView",
+         props: {
+            dataset: {
+               name: this.state.curFile[0].name
+            }
+         }
+      });
    }
 
    render() {
-      const { loading } = this.state;
+      const { loading, curFile } = this.state;
 
       return (
          <Container>
             <WelcomeContainer>
-               <h2>Welcome!</h2>
-               <Text>Add a dataset below to get started</Text>
+              {!!curFile ? (
+                  <h2>Ready to View</h2>
+               ) : (
+                  <h2>Welcome!</h2>
+               )}
+               {!!curFile ? (
+                  <Text>Data successfully uploaded and parsed</Text>
+               ) : (
+                  <Text>Add a dataset below to get started</Text>
+               )}
             </WelcomeContainer>
             <InputContainer>
-               <FileInput
-                  loading={loading}
-                  onUpload={this.handleFile.bind(this)}
-               />
+               {!!curFile ? (
+                  <PreviewContainer>
+                     <img alt="icon" src="images/csv_icon.svg" />
+                     <Text>{curFile[0].name}</Text>
+                     <Row>
+                        <Button label="Restart" onClick={this.reset} />
+                        <Button
+                           theme="primary"
+                           label="Visualize"
+                           onClick={this.viewData}
+                        />
+                     </Row>
+                  </PreviewContainer>
+               ) : (
+                  <FileInput
+                     loading={loading}
+                     onUpload={this.handleFile}
+                  />
+               )}
             </InputContainer>
          </Container>
       );
