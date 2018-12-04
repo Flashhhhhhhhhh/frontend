@@ -12,7 +12,7 @@ const Container = styled.div`
    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
    transition: all 0.3s ease;
    cursor: pointer;
-   margin: auto;
+   margin: 0 auto;
 
    ${props => props.loading && css`
       display: flex;

@@ -93,7 +93,7 @@ class MainView extends Component {
    handleFile = (file) => {
       this.setState({ loading: true });
       const url =
-         "http://ec2-52-87-248-236.compute-1.amazonaws.com:5000/test/test";
+         "http://ec2-34-229-208-64.compute-1.amazonaws.com:5000/test/test";
       this.makeRequest({ url }).then(response => {
          setTimeout(() => {
             setTimeout(() => {
@@ -138,7 +138,7 @@ class MainView extends Component {
             <InputContainer>
                {!!curFile ? (
                   <PreviewContainer>
-                     <img alt="icon" src="images/csv_icon.svg" />
+                     <img alt="icon" src={`images/${curFile[0].name.split('.')[1]}_icon.svg`} />
                      <Text>{curFile[0].name}</Text>
                      <Row>
                         <Button label="Restart" onClick={this.reset} />
