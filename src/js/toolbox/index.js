@@ -9,6 +9,7 @@ export { default as Api } from './components/api';
 export { default as Icon } from './components/icon';
 export { default as FileInput } from './components/file_input';
 export { default as Visualizer } from './components/visualizer'; 
+export { default as Spinner } from './components/spinner';
 /*
 export { default as glamorous } from 'glamorous';
 

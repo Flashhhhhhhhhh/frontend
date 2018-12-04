@@ -5,8 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyles = createGlobalStyle`
    body {
       height: 100%;
-      background: #E9EEF4;
-      font-family: sans-serif;
+      font-family: 'SF Pro Display';
    }
 `;
 class App extends Component {

@@ -1,74 +1,108 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled, { css } from "styled-components";
+import Dropzone from "react-dropzone";
+import { Spinner } from "../../";
 
 const Container = styled.div`
+   position: relative;
    display: flex;
-   height: 150px;
-   width: 150px;
-   justify-content: center;
-   align-items: center;
-   overflow: hidden;
-   border-radius: 4px;
-`;
-
-const Input = styled.input`
-   display: none;
-`;
-
-const Label = styled.label`
    height: 100%;
    width: 100%;
-   position: relative;
+   background: white;
+   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
+   transition: all 0.3s ease;
    cursor: pointer;
+   margin: auto;
 
-   img {
-      max-height: 100%;
-   }
+   ${props => props.loading && css`
+      display: flex;
+      height: 10em;
+      width: 10em;
+      border-radius: 50%;
+   `};
+`;
 
-   &:active {
-      filter: brightness(0.95);
+const dropzoneStyle = {
+   display: "flex",
+   width: "100%",
+   height: "100%"
+};
+
+const DottedOutline = styled.div`
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   flex: 1;
+   margin: 8px;
+   border: 2px dashed lightgray;
+   transition: all 0.3s ease;
+
+   ${props => props.loading && css`
+      border-radius: 50%;
+      animation: rotate 10s;
+   `};
+
+   ${props =>
+      props.dragEntered &&
+      css`
+         background: blue;
+      `};
+
+   @keyframes rotate {
+      from {
+         transform: rotate(0deg);
+      } to {
+         transform: rotate(-360deg);
+      }
    }
 `;
 
-class FileInput extends Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         img: props.img,
-      };
-   }
+const Text = styled.h3`
+   margin: 0;
+   font-size: 2rem;
+   color: rgb(100, 100, 100);
+   text-align: center;
+   font-weight: 400;
+`;
 
-   base64Encode = img => {
-      const reader = new FileReader();
-      reader.readAsDataURL(img);
-      reader.onload = () => this.props.onUpload(reader.result);
-      reader.onerror = function(error) {
-         console.log('Error: ', error);
-      };
-   };
+const activeStyle = {
+   background: "rgba(0, 255, 0, 0.14)",
+   transition: "all 0.15s ease"
+};
 
-   sendImage = img => {
-      this.base64Encode(img);
-      this.setState({ img: window.URL.createObjectURL(img) });
-   };
-
-   render() {
-      const { img } = this.state;
-
-      return (
-         <Container>
-            <Label htmlFor="media-uploader">
-               <img alt="Upload" draggable="false" src={img} />
-            </Label>
-            <Input
-               id="media-uploader"
-               accept="image/x-png,image/gif,image/jpeg"
-               type="file"
-               onChange={e => this.sendImage(e.target.files[0])}
-            />
-         </Container>
-      );
-   }
+const loadingStyle = {
+   display: 'flex',
+   height: '100%',
+   width: '100%',
 }
+
+const FileInput = ({ onUpload, loading }) => {
+   const hello = file => {
+      onUpload(file);
+   };
+
+   return (
+      <Container loading={loading}>
+         <Dropzone
+            onDrop={hello}
+            activeStyle={activeStyle}
+            multiple={false}
+            style={loading ? loadingStyle : dropzoneStyle}
+         >
+            <DottedOutline loading={loading}>
+               {loading ? (
+                  <Spinner />
+               ) : (
+                  <div>
+                     <Text>Drag and drop</Text>
+                     <Text>(.csv, .json)</Text>
+                  </div>
+               )}
+            </DottedOutline>
+         </Dropzone>
+      </Container>
+   );
+};
 
 export default FileInput;

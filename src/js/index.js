@@ -1,31 +1,144 @@
-import React, { Component } from 'react';
-import Header from './components/header';
-import styled from 'styled-components';
-import { Visualizer, Button } from './toolbox'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import Header from "./components/header";
+import styled, { css } from "styled-components";
+import * as views from "./views";
 
-const ContentContainer = styled.div`
+const ViewContainer = styled.div`
+   position: relative;
+`;
+
+const View = styled.div`
    position: fixed;
-   top: 3.5em;
-   bottom: 0;
+   top: 7em;
    left: 0;
    right: 0;
-`;
+   bottom: 0;
+   transition: all 0.35s ease;
+   background: #e9eef4;
 
-const Row = styled.div`
-   display: flex;
-`;
+   ${props =>
+      props.index === props.numViews - 1 &&
+      !props.isMain &&
+      css`
+         animation: slideIn 0.35s ease;
+      `}
 
-const Section = styled.div`
-   margin: 1em;
-   flex: 1;
+   ${props => props.curView && props.goingBack && css`
+      animation: slideOut 0.35s ease;
+   `}
+
+   ${props =>
+      props.index < props.numViews - 1 &&
+      css`
+         transform: translateX(-10%);
+         filter: brightness(0.85);
+      `}
+
+   ${props => props.belowCurView && props.goingBack && css`
+      transform: translateX(0);
+      filter: brightness(1);
+   `}
+
+   @keyframes slideIn {
+      0% {
+         transform: translateX(100vw);
+         box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 4px 16px;
+      }
+   }
+
+   @keyframes slideOut {
+      100% {
+         transform: translateX(100vw);
+         box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 4px 16px;
+      }
+   }
 `;
 
 class Flash extends Component {
+   static getDerivedStateFromProps(nextProps, prevState) {
+      const { viewState } = nextProps;
+      const { viewStack } = viewState;
+      const goingBack = viewStack.length < prevState.viewStack.length;
+
+      return {
+         viewStack: goingBack ? prevState.viewStack : viewStack,
+         goingBack
+      };
+   }
+
+   constructor(props) {
+      super(props);
+      const { viewState } = props;
+      const { viewStack } = viewState;
+
+      this.state = {
+         viewStack,
+         goingBack: false
+      };
+   }
+
+   animateBack() {
+      const { viewState } = this.props;
+      const { viewStack } = viewState;
+
+      setTimeout(() => {
+         this.setState({
+            viewStack,
+            goingBack: false
+         });
+      }, 300);
+   }
+
+   componentDidUpdate(nextProps, prevState) {
+      if (this.state.goingBack) {
+         this.animateBack();
+      }
+   }
+
    render() {
-      return(
+      const { viewStack, goingBack } = this.state;
+
+      return (
          <div>
-            <Header /> 
-            <ContentContainer>
+            <Header />
+            <ViewContainer>
+               {viewStack.map((view, index) => {
+                  return (
+                     <View
+                        key={`view-${view.name}`}
+                        numViews={viewStack.length}
+                        isMain={view.name === "MainView"}
+                        curView={index === viewStack.length-1}
+                        belowCurView={index === viewStack.length-2}
+                        index={index}
+                        goingBack={goingBack}
+                     >
+                        {React.createElement(views[view.name], {
+                           key: view.name,
+                           ...view.props
+                        })}
+                     </View>
+                  );
+               })}
+            </ViewContainer>
+         </div>
+      );
+   }
+}
+
+const mapStateToProps = state => ({
+   viewState: state.viewState
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+)(Flash);
+
+/*
                <Row>
                   <Section>
                      <Visualizer 
@@ -36,10 +149,5 @@ class Flash extends Component {
                      <h3>Hello</h3>
                   </Section>
                </Row>
-            </ContentContainer>
-         </div>
-      );
-   }
-}
 
-export default Flash;
+*/
