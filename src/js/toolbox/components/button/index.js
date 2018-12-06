@@ -20,7 +20,14 @@ const Container = styled.div`
    :last-child {
       margin-right: 0;
    }
-}
+
+   ${props => props.selected && css`
+      background: ${color.blue[4]};
+
+      h2 {
+         color: white !important;
+      }
+   `}
 
    ${props => props.theme === 'list' && css`
       min-height: 48px;
@@ -101,13 +108,14 @@ const Button = ({
    showIndex,
    isSelected,
    onClick,
+   selected,
    chevron,
    locked,
    unlocked,
    onLockToggle,
 }) => {
    return (
-      <Container onClick={onClick} theme={theme}>
+      <Container onClick={onClick} selected={selected} theme={theme}>
          <TextContainer isSelected={isSelected} theme={theme}>
             <Label className="label">{label}</Label>
             {sublabel && <SubLabel>{sublabel}</SubLabel>}
@@ -115,13 +123,13 @@ const Button = ({
          { (locked || unlocked || chevron) && 
             <IconContainer>
                {locked && (
-                  <Icon name="lock" color={color.gray[6]} size={20} onClick={onLockToggle} />
+                  <Icon name="lock" color={selected ? 'white' : color.gray[6]} size={20} onClick={onLockToggle} />
                )}
                {unlocked && (
-                  <Icon name="unlock" color={color.gray[6]} size={20} onClick={onLockToggle} />
+                  <Icon name="unlock" color={selected ? 'white' : color.gray[6]} size={20} onClick={onLockToggle} />
                )}
                {chevron && (
-                  <Icon name="chevron-right" color={color.gray[4]} size={25} />
+                  <Icon name="chevron-right" color={selected ? 'white' : color.gray[4]} size={25} />
                )}
             </IconContainer>
          }

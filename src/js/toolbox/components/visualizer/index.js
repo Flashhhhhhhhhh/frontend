@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import Search from './components/search';
-import ItemPane from './components/item_pane';
-import { Button } from '../../';
-import constants from '../../constants';
+import React, { Component } from "react";
+import styled from "styled-components";
+import Search from "./components/search";
+import ItemPane from "./components/item_pane";
+import { Button } from "../../";
+import constants from "../../constants";
 
 const { color } = constants;
 
@@ -12,12 +12,13 @@ const Container = styled.div`
    flex-direction: column;
    height: 70vh;
    width: 70vw;
-   background: white; 
+   background: white;
    margin: 1em auto;
    padding: 0 16px 16px 16px;
    border-radius: 8px;
    overflow: hidden;
-   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 4px 16px;
+   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px,
+      rgba(0, 0, 0, 0.1) 0px 4px 16px;
 `;
 
 const ItemPaneContainer = styled.div`
@@ -40,10 +41,27 @@ class Visualizer extends Component {
             <Search />
             <ItemPaneContainer>
                <ItemPane>
-                  <Button theme="list" locked label="Item1" chevron onLockToggle={() => alert("Toggled lock")} />
-                  <Button theme="list" unlocked label="Item2" chevron />
-                  <Button theme="list" label="Item3" chevron />
+                  <Button
+                     theme="list"
+                     selected
+                     locked
+                     label="California"
+                     chevron
+                     onLockToggle={() => alert("Toggled lock")}
+                  />
+                  <Button theme="list" unlocked label="Colorado" chevron />
+                  <Button theme="list" label="Washington" chevron />
                </ItemPane>
+               <ItemPane>
+                  <Button theme="list" locked label="Sacramento" chevron />
+                  <Button
+                     theme="list"
+                     unlocked
+                     label="Santa Barbara"
+                     chevron
+                  />
+               </ItemPane>
+               <ItemPane />
                {this.props.itemPanes}
             </ItemPaneContainer>
             <ActionButtonContainer>
@@ -57,8 +75,8 @@ class Visualizer extends Component {
 Visualizer.defaultProps = {
    itemPanes: [],
    actionButtons: [],
-   onSearchChange: () => { },
-}
+   onSearchChange: () => {}
+};
 
-export { default as ItemPane } from './components/item_pane';
+export { default as ItemPane } from "./components/item_pane";
 export default Visualizer;

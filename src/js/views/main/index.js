@@ -67,7 +67,7 @@ class MainView extends Component {
       };
    }
 
-   constructor() {   
+   constructor() {
       super();
       this.state = initialState;
    }
@@ -88,9 +88,9 @@ class MainView extends Component {
                reject(Error(e));
             });
       });
-   }
+   };
 
-   handleFile = (file) => {
+   handleFile = file => {
       this.setState({ loading: true });
       const url =
          "http://ec2-34-229-208-64.compute-1.amazonaws.com:5000/test/test";
@@ -101,11 +101,11 @@ class MainView extends Component {
             }, 300);
          }, 3000);
       });
-   }
+   };
 
    reset = () => {
       this.setState(initialState);
-   }
+   };
 
    viewData = () => {
       this.props.pushView({
@@ -116,19 +116,16 @@ class MainView extends Component {
             }
          }
       });
-   }
+   };
 
    render() {
-      const { loading, curFile } = this.state;
+      const { loading, curFile, selected } = this.state;
 
       return (
          <Container>
+            <div class="checkbox selected" />
             <WelcomeContainer>
-              {!!curFile ? (
-                  <h2>Ready to View</h2>
-               ) : (
-                  <h2>Welcome!</h2>
-               )}
+               {!!curFile ? <h2>Ready to View</h2> : <h2>Welcome!</h2>}
                {!!curFile ? (
                   <Text>Data successfully uploaded and parsed</Text>
                ) : (
@@ -138,7 +135,10 @@ class MainView extends Component {
             <InputContainer>
                {!!curFile ? (
                   <PreviewContainer>
-                     <img alt="icon" src={`images/${curFile[0].name.split('.')[1]}_icon.svg`} />
+                     <img
+                        alt="icon"
+                        src={`images/${curFile[0].name.split(".")[1]}_icon.svg`}
+                     />
                      <Text>{curFile[0].name}</Text>
                      <Row>
                         <Button label="Restart" onClick={this.reset} />
@@ -150,10 +150,7 @@ class MainView extends Component {
                      </Row>
                   </PreviewContainer>
                ) : (
-                  <FileInput
-                     loading={loading}
-                     onUpload={this.handleFile}
-                  />
+                  <FileInput loading={loading} onUpload={this.handleFile} />
                )}
             </InputContainer>
          </Container>
