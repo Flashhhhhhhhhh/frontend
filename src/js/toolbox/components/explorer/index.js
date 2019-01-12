@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import Fuse from "fuse.js";
 import Explorer from "./explorer";
 import Search from "./search";
 import { Button } from "../../";
 import constants from "../../constants";
+import { minBy } from "lodash";
 
 const { color } = constants;
 
@@ -36,6 +38,63 @@ class ExplorerComponent extends Component {
       };
    }
 
+   createItemList = (tree, itemName = null, path = []) => {
+      const item = {
+         itemName,
+         path,
+         pathText: path.join(" ")
+      };
+
+      if (!tree) {
+         // This is a leaf.
+         return item;
+      }
+
+      const itemList = [];
+
+      if (itemName) {
+         // If this isn't the root node, include it in the list.
+         itemList.push(item);
+      }
+
+      // Recursively create a list of items for each child.
+      const childItems = Object.keys(tree).map(itemName => {
+         const childTree = tree[itemName];
+         const childPath = [...path, itemName];
+         return this.createItemList(childTree, itemName, childPath);
+      });
+
+      // Flatten the lists together.
+      return itemList.concat(...childItems);
+   };
+
+   getPath = str => {
+      this.itemList = this.itemList || this.createItemList(this.props.data);
+
+      const fuse = new Fuse(this.itemList, {
+         keys: [
+            {
+               name: "itemName",
+               weight: 0.3
+            },
+            {
+               name: "pathText",
+               weight: 0.7
+            }
+         ],
+         includeScore: true,
+         threshold: 0.4
+      });
+      const bestResult = minBy(
+         fuse.search(str.trim()),
+         result =>
+            // Prefer more general categories (which have a smaller path length).
+            result.score * (1 + 0.1 * result.item.path.length)
+      );
+
+      return bestResult ? bestResult.item.path : [];
+   };
+
    updatePath = path => {
       const { id } = this.props;
       this.setState({ path });
@@ -50,8 +109,13 @@ class ExplorerComponent extends Component {
       }, 100);
    };
 
+   handleSearch = text => {
+      const path = this.getPath(text);
+      this.updatePath(path);
+   }
+
    componentDidMount() {
-      
+      const path = this.getPath("Camera");
    }
 
    render() {
@@ -59,7 +123,7 @@ class ExplorerComponent extends Component {
 
       return (
          <Container>
-            <Search />
+            <Search onChange={this.handleSearch}/>
             <Explorer
                id={`explorer-${id}`}
                data={this.props.data}
