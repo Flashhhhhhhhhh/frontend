@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import Explorer from './explorer';
+import Explorer from "./explorer";
 import Search from "./search";
 import { Button } from "../../";
 import constants from "../../constants";
@@ -33,20 +33,40 @@ class ExplorerComponent extends Component {
       super(props);
       this.state = {
          path: []
-      }
+      };
+   }
+
+   updatePath = path => {
+      const { id } = this.props;
+      this.setState({ path });
+
+      const el = document.getElementById(`explorer-${id}`);
+      setTimeout(() => {
+         el.scroll({
+            top: 0,
+            left: el.scrollWidth,
+            behavior: "smooth"
+         });
+      }, 100);
+   };
+
+   componentDidMount() {
+      
    }
 
    render() {
+      const { id } = this.props;
+
       return (
          <Container>
             <Search />
             <Explorer
+               id={`explorer-${id}`}
                data={this.props.data}
                path={this.state.path}
-               onChange={path => this.setState({ path })}
+               onChange={this.updatePath}
             />
-            <ActionButtonContainer>
-            </ActionButtonContainer>
+            <ActionButtonContainer />
          </Container>
       );
    }

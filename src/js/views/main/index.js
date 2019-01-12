@@ -127,7 +127,6 @@ class MainView extends Component {
 
       return (
          <Container>
-            <div class="checkbox selected" />
             <WelcomeContainer>
                {!!curFile ? <h2>Ready to View</h2> : <h2>Welcome!</h2>}
                {!!curFile ? (

@@ -1,24 +1,33 @@
-import React from "react";
+import React, { Component } from "react";
 import Icon, { ChevronRight } from "./icon";
 import Item from "./item";
 import Column from "./column";
 import Spacer from "./spacer";
 import Truncate from "./truncate";
+import constants from '../../constants';
 
-function Explorer({ data, path, onChange, width, height }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        width,
-        height,
-        overflowX: "auto"
-      }}
-    >
-      <RecursiveExplorer data={data} leadingPath={path} onChange={onChange} />
-    </div>
-  );
+const { color } = constants;
+
+class Explorer extends Component {
+   render() {
+      const { id, data, path, onChange, width, height } = this.props;
+
+      return (
+         <div
+           id={id}
+           style={{
+             display: "flex",
+             width,
+             height,
+             overflowX: "auto"
+           }}
+         >
+           <RecursiveExplorer data={data} leadingPath={path} onChange={onChange} />
+         </div>
+       );
+   }
 }
+
 
 Explorer.defaultProps = {
   width: "100%",
@@ -38,10 +47,7 @@ function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
           return (
             <Item
               key={name}
-              style={{
-                color: isSelected ? "white" : "black",
-                backgroundColor: isSelected ? "black" : "transparent"
-              }}
+              isSelected={isSelected}
               onClick={() => onChange(trailingPath.concat(name))}
             >
               <Truncate>{name}</Truncate>
@@ -49,8 +55,8 @@ function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
               {Array.isArray(data[name]) ? null : (
                 <Icon
                   icon={ChevronRight}
-                  size={16}
-                  color={isSelected ? "white" : "black"}
+                  size={20}
+                  color={isSelected ? "white" : color.gray[5]}
                 />
               )}
             </Item>

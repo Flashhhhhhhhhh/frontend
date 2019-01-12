@@ -32,9 +32,9 @@ class VisualizerView extends Component {
          <Container>
             <Title>{this.props.dataset.name}</Title>
             <Explorer
+               id={1}
                data={data}
             />
-
          </Container>
       );
    }

@@ -1,19 +1,15 @@
 import React from "react";
+import styled from 'styled-components';
+import constants from '../../constants';
 
-function Column({ style, ...props }) {
-  return (
-    <div
-      style={{
-        width: 240,
-        height: "100%",
-        flex: "0 0 auto",
-        borderRight: "1px solid black",
-        overflowY: "auto",
-        ...style
-      }}
-      {...props}
-    />
-  );
-}
+const { color } = constants;
+
+const Column = styled.div`
+   width: 240px;
+   height: 100%;
+   flex: 0 0 auto;
+   border-right: 1px solid ${color.gray[4]};
+   overflow-y: auto;
+`;
 
 export default Column;
