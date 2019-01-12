@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
-import { Visualizer as Viewer } from "../../toolbox";
+import { Explorer } from "../../toolbox";
+import data from './data.json'
 
 const Container = styled.div`
    display: flex;
@@ -30,7 +31,10 @@ class VisualizerView extends Component {
       return (
          <Container>
             <Title>{this.props.dataset.name}</Title>
-            <Viewer />
+            <Explorer
+               data={data}
+            />
+
          </Container>
       );
    }

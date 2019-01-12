@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Icon } from '../../../';
-import constants from '../../../constants';
+import { Icon } from '../../';
+import constants from '../../constants';
 
 const { color } = constants;
 
@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const Input = styled.input`
    flex: 1;
-   height: 97%
+   height: 97%;
    font-size: 24px;
    border: none;
    padding-left: 8px;

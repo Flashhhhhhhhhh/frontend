@@ -93,7 +93,7 @@ class MainView extends Component {
    handleFile = file => {
       this.setState({ loading: true });
       const url =
-         "http://ec2-34-229-208-64.compute-1.amazonaws.com:5000/test/test";
+         "http://ec2-54-86-77-144.compute-1.amazonaws.com:5000/test/test";
       this.makeRequest({ url }).then(response => {
          setTimeout(() => {
             setTimeout(() => {
@@ -112,11 +112,15 @@ class MainView extends Component {
          name: "VisualizerView",
          props: {
             dataset: {
-               name: this.state.curFile[0].name
+               name: 'this.state.curFile[0].name'
             }
          }
       });
    };
+
+   componentDidMount() {
+      this.viewData();
+   }
 
    render() {
       const { loading, curFile, selected } = this.state;
