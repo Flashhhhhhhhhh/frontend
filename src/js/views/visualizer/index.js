@@ -27,7 +27,6 @@ class VisualizerView extends Component {
    }
 
    render() {
-      console.log(this.props);
       return (
          <Container>
             <Title>{this.props.dataset.name}</Title>

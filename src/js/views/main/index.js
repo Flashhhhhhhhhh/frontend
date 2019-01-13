@@ -123,7 +123,7 @@ class MainView extends Component {
    }
 
    render() {
-      const { loading, curFile, selected } = this.state;
+      const { loading, curFile } = this.state;
 
       return (
          <Container>

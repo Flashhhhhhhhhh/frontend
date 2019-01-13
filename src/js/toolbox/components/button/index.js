@@ -1,150 +1,258 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import constants from '../../constants';
-import Icon from '../icon';
+import React from "react";
+import PropTypes from "prop-types";
+import styled, { css } from "styled-components";
 
-const { color } = constants;
+import constants from "../../constants";
 
-const Container = styled.div`
-   display: flex;
-   height: 1em;
+const { color, fontSize, lineHeight, spacing, transition } = constants;
+
+const propTypes = {
+   /** Contents of the button. */
+   children: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node,
+      PropTypes.arrayOf(PropTypes.node)
+   ]).isRequired,
+   /** Choose a button design. */
+   design: PropTypes.oneOf([
+      "default",
+      "primary",
+      "secondary",
+      "outline",
+      "plain"
+   ]),
+   /** Disable button. */
+   disabled: PropTypes.bool,
+   /** Set width of the button to 100%. */
+   fullWidth: PropTypes.bool,
+   /** If an `href` is provided, the underlying element will be an `<a>` instead of a `<button>`. */
+   href: PropTypes.string,
+   /** Size of button. */
+   size: PropTypes.oneOf(["small", "medium", "large"]),
+   /** Callback when clicked. */
+   onClick: PropTypes.func
+};
+
+const defaultProps = {
+   design: "default",
+   disabled: false,
+   fullWidth: false,
+   href: "",
+   size: "medium",
+   onClick: () => {}
+};
+
+// const designs = {
+//    default: {
+//       color: color.grayAlpha[9],
+//       backgroundColor: "transparent",
+//       borderColor: color.grayAlpha[3],
+//       ":hover": {
+//          backgroundColor: color.grayAlpha[1]
+//       },
+//       ":focus": {
+//          boxShadow: `0 0 0 3px ${color.grayAlpha[3]}`
+//       }
+//    },
+//    primary: {
+//       color: color.white,
+//       backgroundColor: color.blue[4],
+//       borderColor: color.blue[4],
+//       ":hover": {
+//          color: color.white,
+//          backgroundColor: color.blue[5],
+//          borderColor: color.blue[5]
+//       },
+//       ":focus": {
+//          boxShadow: `0 0 0 3px ${color.blueAlpha[2]}`
+//       }
+//    },
+//    secondary: {
+//       color: color.grayAlpha[9],
+//       backgroundColor: color.grayAlpha[3],
+//       ":hover": {
+//          backgroundColor: color.grayAlpha[4]
+//       },
+//       ":focus": {
+//          boxShadow: `0 0 0 3px ${color.grayAlpha[4]}`
+//       }
+//    },
+//    outline: {
+//       color: color.blue[4],
+//       backgroundColor: "transparent",
+//       borderColor: color.blue[4],
+//       ":hover": {
+//          color: color.white,
+//          backgroundColor: color.blue[4],
+//          borderColor: color.blue[4]
+//       },
+//       ":focus": {
+//          boxShadow: `0 0 0 3px ${color.blueAlpha[2]}`
+//       }
+//    },
+//    plain: {
+//       color: color.grayAlpha[9],
+//       backgroundColor: "transparent",
+//       borderColor: "transparent",
+//       ":hover": {
+//          color: color.blue[4]
+//       },
+//       ":focus": {
+//          backgroundColor: color.grayAlpha[1]
+//       }
+//    }
+// };
+
+const sizes = {
+   small: {
+      padding: `${spacing[0]} ${spacing[2]}`,
+      fontSize: fontSize[1],
+      lineHeight: lineHeight.copy
+   },
+   medium: {
+      padding: `${spacing[1]} ${spacing[3]}`,
+      fontSize: fontSize[1],
+      lineHeight: lineHeight.copy
+   },
+   large: {
+      padding: `${spacing[3]} ${spacing[4]}`,
+      fontSize: fontSize[2],
+      lineHeight: lineHeight.title
+   }
+};
+
+const ButtonContainer = styled.button`
+   display: inline-block;
+   box-sizing: border-box;
+   font-family: inherit;
+   text-decoration: none;
+   border: 1px solid transparent;
    border-radius: 4px;
-   padding: 12px 32px;
-   cursor: pointer;
-   margin-right: 0.5em;
-
-   :active {
-      background: ${color.gray[1]};
-   }
-
-   :last-child {
-      margin-right: 0;
-   }
-
-   ${props => props.selected && css`
-      background: ${color.blue[4]};
-
-      h2 {
-         color: white !important;
-      }
-   `}
-
-   ${props => props.theme === 'list' && css`
-      min-height: 48px;
-      border-radius: 0;
-      padding: 0 8px;
-      margin-right: 0;
-      border-bottom: 1px solid ${color.gray[3]};
-   `};
-
-   ${props => props.theme === 'primary' && css`
-      background: ${color.blue[4]};
-      border: 1px solid transparent;
-
-      :active {
-         background: ${color.blue[5]};
-      }
-   `};
-
-   ${props => props.theme === 'secondary' && css`
-      border: 1px solid ${color.gray[4]};
-   `};
-`;
-
-const TextContainer = styled.div`
-   display: flex;
-   flex: 1;
-   flex-direction: column;
-   justify-content: center;
+   outline: 0;
    white-space: nowrap;
-   overflow: hidden;
-   text-overflow: ellipsis;
+   cursor: pointer;
+   user-select: none;
+   transition: all ${transition.duration} ${transition.easing};
 
-   h2,
-   h4 {
-      font-weight: normal;
-      color: ${props => props.isSelected ? 'white' : 'black'};
-      user-select: none;
-   }
+   ${props =>
+      props.design === "default" &&
+      css`
+         color: ${color.grayAlpha[9]};
+         background-color: transparent;
+         border-color: ${color.grayAlpha[1]};
 
-   ${props => props.theme === "primary" && css`
-      h2, h4 {
-         color: white;
-         font-weight: 800;
-         margin-left: 0;
-      }
-   `};
-
-   ${props => props.theme === "secondary" && css`
-      h2, h4 {
-         margin-left: 0;
-      }
-   `};
-`;
-
-const Label = styled.h2`
-   margin: 0;
-   font-size: 1rem;
-   margin-left: 16px;
-`;
-
-const SubLabel = styled.h4`
-   margin: 0;
-`;
-
-const IconContainer = styled.div`
-   height: 3em;
-   width: 3em;
-   display: flex;
-   justify-content: flex-end;
-   align-items: center;
-`;
-
-const Button = ({
-   index,
-   theme,
-   label,
-   sublabel,
-   showIndex,
-   isSelected,
-   onClick,
-   selected,
-   chevron,
-   locked,
-   unlocked,
-   onLockToggle,
-}) => {
-   return (
-      <Container onClick={onClick} selected={selected} theme={theme}>
-         <TextContainer isSelected={isSelected} theme={theme}>
-            <Label className="label">{label}</Label>
-            {sublabel && <SubLabel>{sublabel}</SubLabel>}
-         </TextContainer>
-         { (locked || unlocked || chevron) && 
-            <IconContainer>
-               {locked && (
-                  <Icon name="lock" color={selected ? 'white' : color.gray[6]} size={20} onClick={onLockToggle} />
-               )}
-               {unlocked && (
-                  <Icon name="unlock" color={selected ? 'white' : color.gray[6]} size={20} onClick={onLockToggle} />
-               )}
-               {chevron && (
-                  <Icon name="chevron-right" color={selected ? 'white' : color.gray[4]} size={25} />
-               )}
-            </IconContainer>
+         :hover {
+            background-color: ${color.grayAlpha[1]};
          }
+
+         :focus {
+            box-shadow: 0 0 0 3px ${color.grayAlpha[3]};
+         }
+      `}
+
+   ${props =>
+      props.design === "primary" &&
+      css`
+         color: ${color.white};
+         background-color: ${color.blue[4]};
+
+         :hover {
+            color: ${color.white};
+            background-color: ${color.blue[5]};
+            border-color: ${color.blue[5]};
+         }
+
+         :focus {
+            box-shadow: 0 0 0 3px ${color.blueAlpha[2]};
+         }
+      `};
+
+   ${({ size }) => sizes[size]};
+   ${({ fullWidth }) =>
+      fullWidth &&
+      css`
+         display: flex;
+         width: 100%;
+      `};
+   ${({ disabled }) =>
+      disabled &&
+      css`
+         opacity: 0.5;
+         pointer-events: none;
+      `}
+`;
+
+/*
+const ButtonContainer = styled.button(
+   {
+      display: 'inline-block',
+      boxSizing: 'border-box',
+      fontFamily: 'inherit',
+      textDecoration: 'none',
+      border: '1px solid transparent',
+      borderRadius,
+      outline: 0,
+      whiteSpace: 'nowrap',
+      cursor: 'pointer',
+      userSelect: 'none',
+      transition: `all ${transition.duration} ${transition.easing}`,
+   },
+   ({ design }) => designs[design],
+   ({ size }) => sizes[size],
+   ({ fullWidth }) =>
+      fullWidth && {
+         display: 'flex',
+         width: '100%',
+      },
+   ({ disabled }) =>
+      disabled && {
+         opacity: 0.5,
+         pointerEvents: 'none',
+      },
+);
+*/
+
+const LinkContainer = ButtonContainer.withComponent("a");
+
+// Buttons cannot be flex containers in some browsers (i.e. Safari).
+// To get around this, we wrap the contents of the button in a flex container.
+const FlexContainer = styled.span({
+   width: "100%",
+   display: "flex",
+   justifyContent: "center",
+   alignItems: "center",
+   textAlign: "center",
+
+   "> :not(:first-child)": {
+      marginLeft: spacing[1]
+   }
+});
+
+const TruncateContainer = styled.span({
+   textOverflow: "ellipsis",
+   overflow: "hidden",
+   whiteSpace: "nowrap"
+});
+
+const Button = ({ children, ...props }) => {
+   const Container = props.href === "" ? ButtonContainer : LinkContainer;
+
+   return (
+      <Container {...props} tabIndex={props.disabled ? -1 : 0}>
+         <FlexContainer>
+            {React.Children.map(children, child =>
+               typeof child !== "string" ? (
+                  child
+               ) : (
+                  <TruncateContainer>{child}</TruncateContainer>
+               )
+            )}
+         </FlexContainer>
       </Container>
    );
 };
 
-Button.defaultProps = {
-   theme: 'secondary',
-   label: 'Button',
-   locked: false,
-   unlocked: false,
-   isSelected: false,
-   onClick: () => { },
-   onLockToggle: () => { },
-}
+Button.propTypes = propTypes;
+Button.defaultProps = defaultProps;
 
 export default Button;

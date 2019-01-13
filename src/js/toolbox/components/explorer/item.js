@@ -18,11 +18,16 @@ const Button = styled.button`
    box-sizing: border-box;
    outline: 0;
    -webkit-appearance: none;
+   cursor: pointer;
 
    ${props => props.isSelected && css`
       color: white;
       background: ${color.blue[4]};
    `}
+
+   :active {
+      background: ${color.gray[1]};
+   }
 `;
 
 function Item({ style, ...props }) {

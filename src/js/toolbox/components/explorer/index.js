@@ -13,10 +13,11 @@ const Container = styled.div`
    display: flex;
    flex-direction: column;
    height: 70vh;
-   width: 70vw;
+   width: 80%;
+   max-width: 70em;
    background: white;
    margin: 1em auto;
-   padding: 0 16px 16px 16px;
+   padding: 0 16px 8px 16px;
    border-radius: 8px;
    overflow: hidden;
    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px,
@@ -26,7 +27,8 @@ const Container = styled.div`
 const ActionButtonContainer = styled.div`
    display: flex;
    justify-content: flex-end;
-   padding: 16px 16px 0 16px;
+   height: 3em;
+   padding: 12px 0 4px 0;
    border-top: 1px solid ${color.gray[3]};
 `;
 
@@ -34,7 +36,8 @@ class ExplorerComponent extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         path: []
+         path: [],
+         canSelect: false
       };
    }
 
@@ -68,7 +71,7 @@ class ExplorerComponent extends Component {
       return itemList.concat(...childItems);
    };
 
-   getPath = str => {
+   search = str => {
       this.itemList = this.itemList || this.createItemList(this.props.data);
 
       const fuse = new Fuse(this.itemList, {
@@ -91,13 +94,19 @@ class ExplorerComponent extends Component {
             // Prefer more general categories (which have a smaller path length).
             result.score * (1 + 0.1 * result.item.path.length)
       );
+      console.log(bestResult);
 
-      return bestResult ? bestResult.item.path : [];
+      return {
+         path: bestResult ? bestResult.item.path : []
+      };
    };
 
    updatePath = path => {
       const { id } = this.props;
-      this.setState({ path });
+      this.setState({
+         path,
+         leafSelected: this.checkForLeaf(path)
+      });
 
       const el = document.getElementById(`explorer-${id}`);
       setTimeout(() => {
@@ -109,28 +118,49 @@ class ExplorerComponent extends Component {
       }, 100);
    };
 
-   handleSearch = text => {
-      const path = this.getPath(text);
-      this.updatePath(path);
-   }
+   checkForLeaf = path => {
+      const { data } = this.props;
+      if (!path.length) {
+         return false;
+      }
 
-   componentDidMount() {
-      const path = this.getPath("Camera");
-   }
+      let curSpot = data[path[0]];
+      for (let item of path.slice(1)) {
+         curSpot = curSpot[item];
+      }
+
+      return Array.isArray(curSpot);
+   };
+
+   handleSearch = text => {
+      const searchResult = this.search(text);
+      const { path } = searchResult;
+      this.updatePath(path);
+   };
 
    render() {
       const { id } = this.props;
+      const { leafSelected, path } = this.state;
+      const curItem = path[path.length - 1];
 
       return (
          <Container>
-            <Search onChange={this.handleSearch}/>
+            <Search onChange={this.handleSearch} />
             <Explorer
                id={`explorer-${id}`}
                data={this.props.data}
                path={this.state.path}
                onChange={this.updatePath}
             />
-            <ActionButtonContainer />
+            <ActionButtonContainer>
+               <Button
+                  disabled={!leafSelected}
+                  onClick={() => alert("Selected " + curItem)}
+                  design="primary"
+               >
+                  Select
+               </Button>
+            </ActionButtonContainer>
          </Container>
       );
    }
