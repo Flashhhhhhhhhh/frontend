@@ -5,6 +5,7 @@ import Item from "./item";
 import Column from "./column";
 import Spacer from "./spacer";
 import Truncate from "./truncate";
+import Preview from "./preview";
 import constants from "../../constants";
 import * as Actions from "../../../popups/actions";
 
@@ -51,27 +52,35 @@ const RecursiveExplorer = ({
    pushPopup
 }) => {
    if (Array.isArray(data)) {
-      return null;
+      return (
+         <Column>
+            <Preview data={data} />
+         </Column>
+      );
    }
 
    const setupOptionsMenu = e => {
-      e.stopPropagation();
       pushPopup({
          name: "Options",
          props: {
             options: [
                {
-                  label: 'Rename',
-                  icon: 'edit'
+                  label: "Rename",
+                  icon: "edit"
                },
                {
-                  label: 'Delete',
-                  icon: 'trash'
+                  label: "Lock",
+                  icon: "lock"
+               },
+               {
+                  label: "Delete",
+                  icon: "trash"
                }
             ]
          }
       });
    };
+   console.log(leadingPath);
 
    return (
       <React.Fragment>
