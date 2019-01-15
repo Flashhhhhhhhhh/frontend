@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Header from "./components/header";
 import styled, { css } from "styled-components";
 import * as views from "./views";
+import PopupContainer from './popups/popup_container';
 
 const ViewContainer = styled.div`
    position: relative;
@@ -123,6 +124,7 @@ class Flash extends Component {
                   );
                })}
             </ViewContainer>
+            <PopupContainer />
          </div>
       );
    }
@@ -138,17 +140,3 @@ export default connect(
    mapStateToProps,
    mapDispatchToProps
 )(Flash);
-
-/*
-               <Row>
-                  <Section>
-                     <Visualizer 
-                        actionButtons={[<Button theme="primary" label="Choose" />]}
-                     />
-                  </Section>
-                  <Section>
-                     <h3>Hello</h3>
-                  </Section>
-               </Row>
-
-*/

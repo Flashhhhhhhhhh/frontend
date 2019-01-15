@@ -1,8 +1,20 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import constants from '../../constants';
+import React from "react";
+import styled, { css } from "styled-components";
+import constants from "../../constants";
 
 const { color } = constants;
+
+const Container = styled.div`
+   .options-button {
+      display: none;
+   }
+
+   :hover {
+      .options-button {
+         display: block;
+      }
+   }
+`;
 
 const Button = styled.button`
    width: 100%;
@@ -20,22 +32,24 @@ const Button = styled.button`
    -webkit-appearance: none;
    cursor: pointer;
 
-   ${props => props.isSelected && css`
-      color: white;
-      background: ${color.blue[4]};
-   `}
+   ${props =>
+      props.isSelected &&
+      css`
+         color: white;
+         background: ${color.blue[4]};
+      `}
 
    :active {
-      background: ${color.gray[1]};
+      filter: brightness(0.95);
    }
 `;
 
 function Item({ style, ...props }) {
-  return (
-    <Button
-      {...props}
-    />
-  )
+   return (
+      <Container>
+         <Button {...props} />
+      </Container>
+   );
 }
 
-export default Item
+export default Item;

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "feather-icons": "^4.9.0",
+    "feather-icons": "^4.10.0",
     "fuse.js": "^3.3.0",
     "lodash": "^4.17.11",
     "react": "^16.5.2",

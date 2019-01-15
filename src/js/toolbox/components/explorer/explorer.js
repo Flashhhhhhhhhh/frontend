@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import Icon, { ChevronRight } from "./icon";
+import { connect } from "react-redux";
+import { Icon } from "../../";
 import Item from "./item";
 import Column from "./column";
 import Spacer from "./spacer";
 import Truncate from "./truncate";
 import constants from "../../constants";
+import * as Actions from "../../../popups/actions";
 
 const { color } = constants;
 
@@ -22,7 +24,7 @@ class Explorer extends Component {
                overflowX: "auto"
             }}
          >
-            <RecursiveExplorer
+            <ConnectedRecursiveExplorer
                data={data}
                leadingPath={path}
                onChange={onChange}
@@ -37,10 +39,39 @@ Explorer.defaultProps = {
    height: "100%"
 };
 
-function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
+const mapDispatchToProps = dispatch => ({
+   pushPopup: popup => dispatch(Actions.pushPopup(popup))
+});
+
+const RecursiveExplorer = ({
+   data,
+   leadingPath,
+   trailingPath,
+   onChange,
+   pushPopup
+}) => {
    if (Array.isArray(data)) {
       return null;
    }
+
+   const setupOptionsMenu = e => {
+      e.stopPropagation();
+      pushPopup({
+         name: "Options",
+         props: {
+            options: [
+               {
+                  label: 'Rename',
+                  icon: 'edit'
+               },
+               {
+                  label: 'Delete',
+                  icon: 'trash'
+               }
+            ]
+         }
+      });
+   };
 
    return (
       <React.Fragment>
@@ -55,9 +86,16 @@ function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
                   >
                      <Truncate>{name}</Truncate>
                      <Spacer />
+                     <Icon
+                        className="options-button"
+                        name="more-horizontal"
+                        size={20}
+                        color={isSelected ? "white" : color.gray[5]}
+                        onClick={setupOptionsMenu}
+                     />
                      {Array.isArray(data[name]) ? null : (
                         <Icon
-                           icon={ChevronRight}
+                           name="chevron-right"
                            size={20}
                            color={isSelected ? "white" : color.gray[5]}
                         />
@@ -67,7 +105,7 @@ function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
             })}
          </Column>
          {leadingPath.length > 0 ? (
-            <RecursiveExplorer
+            <ConnectedRecursiveExplorer
                data={data[leadingPath[0]]}
                leadingPath={leadingPath.slice(1)}
                trailingPath={trailingPath.concat(leadingPath.slice(0, 1))}
@@ -76,7 +114,12 @@ function RecursiveExplorer({ data, leadingPath, trailingPath, onChange }) {
          ) : null}
       </React.Fragment>
    );
-}
+};
+
+const ConnectedRecursiveExplorer = connect(
+   null,
+   mapDispatchToProps
+)(RecursiveExplorer);
 
 RecursiveExplorer.defaultProps = {
    trailingPath: []

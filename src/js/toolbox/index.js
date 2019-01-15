@@ -10,6 +10,7 @@ export { default as Icon } from './components/icon';
 export { default as FileInput } from './components/file_input';
 export { default as Explorer } from './components/explorer';
 export { default as Spinner } from './components/spinner';
+export { default as OptionsButton } from './components/options_button';
 /*
 export { default as glamorous } from 'glamorous';
 
