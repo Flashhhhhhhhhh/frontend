@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
-import { FileInput, Button } from "../../toolbox";
+import { FileInput, Button, Icon } from "../../toolbox";
 
 const Container = styled.div`
    display: flex;
@@ -12,15 +12,24 @@ const Container = styled.div`
 `;
 
 const WelcomeContainer = styled.div`
+   display: flex;
+   align-items: center;
+   max-width: 28em;
    margin: 10vh 0;
-   text-align: center;
+`;
 
-   h2 {
-      font-weight: 900;
-      font-size: 42px;
-      color: rgb(70, 70, 70);
-      margin: 0;
-   }
+const Subtext = styled.h2`
+   font-weight: 300;
+   font-size: 42px;
+   color: rgb(70, 70, 70);
+   margin: 0;
+`;
+
+const Emoji = styled.h2`
+   width: 60px;
+   height: 60px;
+   font-size: 50px;
+   margin: 0 24px;
 `;
 
 const PreviewContainer = styled.div`
@@ -29,6 +38,10 @@ const PreviewContainer = styled.div`
    justify-content: space-between;
    align-items: center;
    height: 13em;
+
+   button {
+      margin-right: 8px;
+   }
 
    img {
       max-height: 5em;
@@ -51,7 +64,7 @@ const Text = styled.h3`
    margin: 0 auto;
    color: #2c4358;
    font-size: 23px;
-   font-weight: 400;
+   font-weight: 500;
 `;
 
 const initialState = {
@@ -112,7 +125,7 @@ class MainView extends Component {
          name: "VisualizerView",
          props: {
             dataset: {
-               name: 'this.state.curFile[0].name'
+               name: "this.state.curFile[0].name"
             }
          }
       });
@@ -128,12 +141,19 @@ class MainView extends Component {
       return (
          <Container>
             <WelcomeContainer>
-               {!!curFile ? <h2>Ready to View</h2> : <h2>Welcome!</h2>}
-               {!!curFile ? (
-                  <Text>Data successfully uploaded and parsed</Text>
-               ) : (
-                  <Text>Add a dataset below to get started</Text>
-               )}
+               <Emoji>{!curFile ? '👋' : '🎉'}</Emoji>
+               <div>
+                  {!!curFile ? (
+                     <Subtext>Ready to View</Subtext>
+                  ) : (
+                     <Subtext>Welcome!</Subtext>
+                  )}
+                  {!!curFile ? (
+                     <Text>Data successfully uploaded and parsed</Text>
+                  ) : (
+                     <Text>Add a dataset below to get started</Text>
+                  )}
+               </div>
             </WelcomeContainer>
             <InputContainer>
                {!!curFile ? (
@@ -144,12 +164,10 @@ class MainView extends Component {
                      />
                      <Text>{curFile[0].name}</Text>
                      <Row>
-                        <Button label="Restart" onClick={this.reset} />
-                        <Button
-                           theme="primary"
-                           label="Visualize"
-                           onClick={this.viewData}
-                        />
+                        <Button onClick={this.reset}>Restart</Button>
+                        <Button design="primary" onClick={this.viewData}>
+                           Visualize
+                        </Button>
                      </Row>
                   </PreviewContainer>
                ) : (
