@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import OptionsMenu from './options';
+import DirAdder from './dir_adder';
 
 const popups = {
-   Options: <OptionsMenu />
+   Options: <OptionsMenu />,
+   DirAdder: <DirAdder />,
 }
 
 const Container = styled.div``;

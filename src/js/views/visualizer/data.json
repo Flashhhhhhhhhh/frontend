@@ -1,7 +1,10 @@
 {
    "Camera": {
      "Canon Camera": {
-       "Canon AE-1": [],
+       "BOB": [{
+          "SSN": 12345
+
+       }],
        "Canon EOS 30": [],
        "Canon EOS 5D Mark II": [],
        "Canon EOS 7D": [],

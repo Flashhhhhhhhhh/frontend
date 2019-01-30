@@ -25,20 +25,21 @@ const Title = styled.h3`
 
 const Text = styled.h3`
    max-width: 80%;
-   font-weight: 300; 
+   font-weight: 300;
 `;
 
 class Preview extends Component {
    render() {
-      const { data } = this.props;
-
       return (
          <Container>
             <Pupper>
-               <img src="/images/pupper.jpg" />
+               <img alt="pupper" src="images/pupper.jpg" />
             </Pupper>
             <Title>Good Boye</Title>
-            <Text>Meet the rarest pupper. He's an example of what we all should strive to be.</Text>
+            <Text>
+               Meet the rarest pupper. He's an example of what we all should
+               strive to be.
+            </Text>
          </Container>
       );
    }

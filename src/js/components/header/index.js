@@ -158,7 +158,7 @@ class Header extends Component {
                      goingBack={goingBack}
                      onClick={index === viewStack.length - 2 ? this.props.popView : null}
                   >
-                     <img alt="back" className="caret" src="/images/back.svg" />
+                     <img alt="back" className="caret" src="images/back.svg" />
                      <h3>{views[viewStack[index].name].metadata.name}</h3>
                   </BackButton>
                );

@@ -36,4 +36,18 @@ export default {
          transform: translateY(100vh);
       }
       `,
+
+   scaleInBounce: keyframes`
+      0% {
+         transform: scale(0.5);
+         opacity: 0;
+      }
+   `,
+
+   scaleOutBounce: keyframes`
+      100% {
+         transform: scale(0.5);
+         opacity: 0;
+      }
+   `,
 };

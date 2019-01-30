@@ -63,6 +63,7 @@ const RecursiveExplorer = ({
       pushPopup({
          name: "Options",
          props: {
+            mousePos: { x: e.screenX, y: e.screenY },
             options: [
                {
                   label: "Rename",
@@ -84,7 +85,7 @@ const RecursiveExplorer = ({
 
    return (
       <React.Fragment>
-         <Column>
+         <Column showPlus>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
                return (

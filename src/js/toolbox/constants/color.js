@@ -1,4 +1,5 @@
 export default {
+   accent: '#2a4356',
    blue: [
       '#EBF4FB',
       '#D6E8F7',
