@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
 import { Explorer } from "../../toolbox";
-import data from './data.json'
 
 const Container = styled.div`
    display: flex;
@@ -22,17 +21,17 @@ const Title = styled.div`
 class VisualizerView extends Component {
    static get metadata() {
       return {
-         name: "Visualizer"
+         name: "Classifier"
       };
    }
 
    render() {
       return (
          <Container>
-            <Title>{this.props.dataset.name}</Title>
+            <Title>Dataset</Title>
             <Explorer
                id={1}
-               data={data}
+               data={this.props.dataset}
             />
          </Container>
       );

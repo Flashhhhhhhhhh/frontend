@@ -91,6 +91,7 @@ class InputModal extends Component {
    };
 
    submit = () => {
+      console.log(this.state);
       this.props.onSubmit({
          name: 'hi', //this.state.curFile[0].name,
       });

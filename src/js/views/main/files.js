@@ -14,6 +14,9 @@ const Container = styled.div`
 
 const File = styled.div`
    position: relative;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
    margin: 8px 16px;
    height: 8.5em;
    animation: slideFromBottom 0.25s;
@@ -35,7 +38,7 @@ const File = styled.div`
    }
 
    h3 {
-      margin: 4px 0 8px 0;
+      margin: 8px 0;
       text-align: center;
       font-weight: 400;
       color: ${color.gray[7]};
@@ -54,8 +57,7 @@ const File = styled.div`
       }
 
       img {
-         opacity: 0;
-         transform: scale(0);
+         filter: brightness(0.95);
       }
    }
 
@@ -72,10 +74,8 @@ const DismissButton = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
-   top: 0;
-   bottom: 2.5em;
-   left: 0;
-   right: 0;
+   top: -12px;
+   right: -12px;
    margin: auto;
    max-height: 3em;
    max-width: 3em;

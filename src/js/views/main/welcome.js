@@ -7,7 +7,7 @@ const Container = styled.div`
    align-items: center;
    flex: 1;
    max-width: 33em;
-   max-height: ${props => props.isReady ? '30%' : '55%'};
+   max-height: ${props => props.isReady ? '20%' : '55%'};
    transition: all 0.3s ease;
 `;
 
