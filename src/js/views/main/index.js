@@ -2,87 +2,51 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
-import { FileInput, Button, Icon } from "../../toolbox";
+import Dropzone from "react-dropzone";
+import Welcome from "./welcome";
+import Files from "./files";
+import UploadButton from "./upload_button";
+
+const apiUrl = "http://ec2-54-86-77-144.compute-1.amazonaws.com:5000/test/test";
 
 const Container = styled.div`
    display: flex;
-   flex: 1;
+   height: 100%;
    flex-direction: column;
    align-items: center;
 `;
 
-const WelcomeContainer = styled.div`
-   display: flex;
-   align-items: center;
-   max-width: 28em;
-   margin: 10vh 0;
+const LowerContainer = styled.div`
+   height: ${props => (props.isOpen ? "60%" : 0)};
+   width: 95%;
+   max-width: 33em;
+   transition: all 0.3s ease;
 `;
 
-const Subtext = styled.h2`
-   font-weight: 300;
-   font-size: 42px;
-   color: rgb(70, 70, 70);
-   margin: 0;
-`;
-
-const Emoji = styled.h2`
-   width: 60px;
-   height: 60px;
-   font-size: 50px;
-   margin: 0 24px;
-`;
-
-const PreviewContainer = styled.div`
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   align-items: center;
-   height: 13em;
-
-   button {
-      margin-right: 8px;
-   }
-
-   img {
-      max-height: 5em;
-   }
-`;
-
-const InputContainer = styled.div`
-   height: 50vh;
-   width: 70vw;
-   max-width: 95%;
-   display: flex;
-   justify-content: center;
-`;
-
-const Row = styled.div`
-   display: flex;
-`;
-
-const Text = styled.h3`
-   margin: 0 auto;
-   color: #2c4358;
-   font-size: 23px;
-   font-weight: 500;
-`;
-
-const initialState = {
-   curFile: null,
-   loading: false
+const dropzoneStyle = {
+   display: "flex",
+   flexDirection: "column",
+   alignItems: "center",
+   flex: 1,
+   width: "100%"
 };
 
+const activeStyle = {
+   background: "rgba(0, 255, 0, 0.14)",
+   transition: "all 0.15s ease"
+};
 class MainView extends Component {
+   state = {
+      fileStack: [],
+      uploading: false,
+      showLoader: false
+   };
+
    static get metadata() {
       return {
          name: "Data Workbench",
          hideTitle: true
       };
-   }
-
-   constructor() {
-      super();
-      this.state = initialState;
    }
 
    makeRequest = ({ url, data }) => {
@@ -103,23 +67,6 @@ class MainView extends Component {
       });
    };
 
-   handleFile = file => {
-      this.setState({ loading: true });
-      const url =
-         "http://ec2-54-86-77-144.compute-1.amazonaws.com:5000/test/test";
-      this.makeRequest({ url }).then(response => {
-         setTimeout(() => {
-            setTimeout(() => {
-               this.setState({ loading: false, curFile: file });
-            }, 300);
-         }, 3000);
-      });
-   };
-
-   reset = () => {
-      this.setState(initialState);
-   };
-
    viewData = () => {
       this.props.pushView({
          name: "VisualizerView",
@@ -131,49 +78,68 @@ class MainView extends Component {
       });
    };
 
-   componentDidMount() {
-      this.viewData();
-   }
+   handleDrop = file => {
+      this.setState(state => {
+         state.fileStack.push(file[0]);
+         return state;
+      });
+   };
+
+   deleteFile = index => {
+      this.setState(state => {
+         state.fileStack.splice(index, 1);
+         return state;
+      });
+   };
+
+   sendFiles = () => {
+      this.setState({
+         uploading: true
+      });
+      setTimeout(() => {
+         this.setState({
+            showLoader: true
+         });
+         this.makeRequest({ apiUrl }).then(response => {
+            setTimeout(() => {
+               this.viewData();
+               this.setState({
+                  uploading: false,
+                  showLoader: false
+               });
+            }, 3000);
+         });
+      }, 500);
+   };
 
    render() {
-      const { loading, curFile } = this.state;
+      const { fileStack, uploading, showLoader } = this.state;
+      const hasFiles = fileStack.length > 0;
 
       return (
          <Container>
-            <WelcomeContainer>
-               <Emoji>{!curFile ? '👋' : '🎉'}</Emoji>
-               <div>
-                  {!!curFile ? (
-                     <Subtext>Ready to View</Subtext>
-                  ) : (
-                     <Subtext>Welcome!</Subtext>
-                  )}
-                  {!!curFile ? (
-                     <Text>Data successfully uploaded and parsed</Text>
-                  ) : (
-                     <Text>Add a dataset below to get started</Text>
-                  )}
-               </div>
-            </WelcomeContainer>
-            <InputContainer>
-               {!!curFile ? (
-                  <PreviewContainer>
-                     <img
-                        alt="icon"
-                        src={`images/${curFile[0].name.split(".")[1]}_icon.svg`}
-                     />
-                     <Text>{curFile[0].name}</Text>
-                     <Row>
-                        <Button onClick={this.reset}>Restart</Button>
-                        <Button design="primary" onClick={this.viewData}>
-                           Visualize
-                        </Button>
-                     </Row>
-                  </PreviewContainer>
-               ) : (
-                  <FileInput loading={loading} onUpload={this.handleFile} />
-               )}
-            </InputContainer>
+            <Dropzone
+               onDrop={this.handleDrop}
+               activeStyle={activeStyle}
+               multiple={true}
+               style={dropzoneStyle}
+               disableClick
+            >
+               <Welcome isReady={hasFiles} uploading={uploading} />
+               <LowerContainer isOpen={hasFiles}>
+                  <Files
+                     fileStack={fileStack}
+                     uploading={uploading}
+                     showLoader={showLoader}
+                     onDelete={this.deleteFile}
+                  />
+                  <UploadButton
+                     fileStack={fileStack}
+                     uploading={uploading}
+                     onClick={this.sendFiles}
+                  />
+               </LowerContainer>
+            </Dropzone>
          </Container>
       );
    }
