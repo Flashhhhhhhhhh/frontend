@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { Spinner, Icon, constants } from "../../toolbox";
 const { color } = constants;
 
+// Main container.
 const Container = styled.div`
    position: relative;
    display: flex;

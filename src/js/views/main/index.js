@@ -7,6 +7,8 @@ import Welcome from "./welcome";
 import Files from "./files";
 import UploadButton from "./upload_button";
 
+const apiUrl = "http://ec2-54-86-77-144.compute-1.amazonaws.com:5000/test/test";
+
 const Container = styled.div`
    display: flex;
    height: 100%;
@@ -98,9 +100,7 @@ class MainView extends Component {
          this.setState({
             showLoader: true
          });
-         const url =
-            "http://ec2-54-86-77-144.compute-1.amazonaws.com:5000/test/test";
-         this.makeRequest({ url }).then(response => {
+         this.makeRequest({ apiUrl }).then(response => {
             setTimeout(() => {
                this.viewData();
                this.setState({

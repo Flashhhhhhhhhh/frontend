@@ -57,7 +57,7 @@ const Welcome = ({ isReady, uploading }) => {
             {isReady && !uploading && (
                <React.Fragment>
                   <Subtext>Ready to Upload</Subtext>
-                  <Text>Feel free to add more files if you'd like.</Text>
+                  <Text>{"Feel free to add more files if you'd like."}</Text>
                </React.Fragment>
             )}
             {!isReady && (
