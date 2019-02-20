@@ -18,29 +18,10 @@ const Title = styled.div`
    font-weight: 900;
 `;
 
-class VisualizerView extends Component {
-   static get metadata() {
-      return {
-         name: "Classifier"
-      };
-   }
-
-   render() {
-      return (
-         <Container>
-            <Title>Dataset</Title>
-            <Explorer
-               id={1}
-               data={this.props.dataset}
-            />
-         </Container>
-      );
-   }
-}
-
 const mapStateToProps = state => {
    return {
-      viewState: state.viewState
+      viewState: state.viewState,
+      apiState: state.apiState,
    };
 };
 
@@ -49,6 +30,30 @@ const mapDispatchToProps = dispatch => {
       pushView: view => dispatch(pushView(view))
    };
 };
+
+class VisualizerView extends Component {
+   static get metadata() {
+      return {
+         name: "Classifier"
+      };
+   }
+
+   render() {
+      const { apiState } = this.props;
+      const { data, refreshCount } = apiState;
+
+      return (
+         <Container>
+            <Title>Dataset</Title>
+            <Explorer
+               key={`visualizer-${refreshCount}`}
+               id={1}
+               data={data}
+            />
+         </Container>
+      );
+   }
+}
 
 export default connect(
    mapStateToProps,

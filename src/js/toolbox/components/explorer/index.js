@@ -139,7 +139,7 @@ class ExplorerComponent extends Component {
    };
 
    render() {
-      const { id, width, height } = this.props;
+      const { id, width, height, nonLeafOnly } = this.props;
       const { leafSelected, path } = this.state;
       const curItem = path[path.length - 1];
 
@@ -154,8 +154,8 @@ class ExplorerComponent extends Component {
             />
             <ActionButtonContainer>
                <Button
-                  disabled={!leafSelected}
-                  onClick={() => alert("Selected " + curItem)}
+               disabled={nonLeafOnly ? !curItem || leafSelected : !leafSelected}
+                  onClick={() => this.props.onChange(path)}
                   design="primary"
                >
                   Select
@@ -164,6 +164,11 @@ class ExplorerComponent extends Component {
          </Container>
       );
    }
+}
+
+ExplorerComponent.defaultProps = {
+   nonLeafOnly: false,
+   onChange: () => {}
 }
 
 export default ExplorerComponent;

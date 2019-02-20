@@ -8,6 +8,7 @@ import Welcome from './welcome';
 import Files from './files';
 import UploadButton from './upload_button';
 import data from '../visualizer/data.json';
+import * as ApiActions from '../../api/actions';
 
 const apiUrl = 'http://ec2-54-86-77-144.compute-1.amazonaws.com:5001/upload';
 
@@ -52,6 +53,14 @@ const activeStyle = {
    background: 'rgba(0, 255, 0, 0.14)',
    transition: 'all 0.15s ease',
 };
+
+const mapDispatchToProps = dispatch => {
+   return {
+      pushView: view => dispatch(pushView(view)),
+      updateData: data => dispatch(ApiActions.updateData(data)),
+   };
+};
+
 class MainView extends Component {
    state = {
       fileStack: [],
@@ -85,11 +94,10 @@ class MainView extends Component {
    };
 
    viewData = dataset => {
+      this.props.updateData(dataset);
       this.props.pushView({
          name: 'VisualizerView',
-         props: {
-            dataset,
-         },
+         props: {}
       });
    };
 
@@ -116,7 +124,6 @@ class MainView extends Component {
          this.setState({
             showLoader: true,
          });
-         let formData = new FormData();
          const { fileStack } = this.state;
          const req = request.post(apiUrl);
          fileStack.forEach(file => {
@@ -136,7 +143,8 @@ class MainView extends Component {
    };
 
    componentDidMount() {
-      this.viewData(data);
+      // Use this to view data without uploading anything (debugging)
+      //this.viewData(data);
    }
 
    render() {
@@ -173,19 +181,7 @@ class MainView extends Component {
    }
 }
 
-const mapStateToProps = state => {
-   return {
-      viewState: state.viewState,
-   };
-};
-
-const mapDispatchToProps = dispatch => {
-   return {
-      pushView: view => dispatch(pushView(view)),
-   };
-};
-
 export default connect(
-   mapStateToProps,
+   null,
    mapDispatchToProps,
 )(MainView);

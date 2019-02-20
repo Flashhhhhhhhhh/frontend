@@ -26,7 +26,9 @@ class Explorer extends Component {
             }}
          >
             <ConnectedRecursiveExplorer
+               key={data}
                data={data}
+               fullData={data}
                leadingPath={path}
                onChange={onChange}
             />
@@ -46,6 +48,7 @@ const mapDispatchToProps = dispatch => ({
 
 const RecursiveExplorer = ({
    data,
+   fullData,
    leadingPath,
    trailingPath,
    onChange,
@@ -59,12 +62,25 @@ const RecursiveExplorer = ({
       );
    }
 
-   const setupOptionsMenu = e => {
+   const setupOptionsMenu = (e, name) => {
       pushPopup({
          name: "Options",
          props: {
             mousePos: { x: e.screenX, y: e.screenY },
             options: [
+               {
+                  label: "Move",
+                  icon: "move",
+                  onClick: () => pushPopup({
+                     name: "ItemMover",
+                     props: {
+                        data: fullData,
+                        leadingPath,
+                        trailingPath,
+                        item: name
+                     }
+                  })
+               },
                {
                   label: "Rename",
                   icon: "edit"
@@ -81,14 +97,13 @@ const RecursiveExplorer = ({
          }
       });
    };
-   console.log(leadingPath);
 
    return (
       <React.Fragment>
-         <Column showPlus>
+         <Column key={data} showPlus>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
-               return (
+               return name === 'tag' || (
                   <Item
                      key={name}
                      isSelected={isSelected}
@@ -101,7 +116,7 @@ const RecursiveExplorer = ({
                         name="more-horizontal"
                         size={20}
                         color={isSelected ? "white" : color.gray[5]}
-                        onClick={setupOptionsMenu}
+                        onClick={e => setupOptionsMenu(e, name)}
                      />
                      {Array.isArray(data[name]) ? null : (
                         <Icon
@@ -116,6 +131,7 @@ const RecursiveExplorer = ({
          </Column>
          {leadingPath.length > 0 ? (
             <ConnectedRecursiveExplorer
+               fullData={fullData}
                data={data[leadingPath[0]]}
                leadingPath={leadingPath.slice(1)}
                trailingPath={trailingPath.concat(leadingPath.slice(0, 1))}

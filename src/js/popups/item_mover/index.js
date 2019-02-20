@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import styled from "styled-components";
-import { Explorer, constants } from "../../toolbox";
-import * as Actions from "../../popups/actions";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { Explorer, constants } from '../../toolbox';
+import * as Actions from '../actions';
+import * as ApiActions from '../../api/actions';
 
 const { color, animation } = constants;
 const { scaleInBounce, scaleOutBounce } = animation;
@@ -35,8 +36,8 @@ const Cover = styled.div`
 const Modal = styled.div`
    position: relative;
    height: 40em;
-   width: 30em;
-   max-width: 100%;
+   width: 60em;
+   max-width: 90%;
    max-height: 100%;
    background: white;
    padding: 24px;
@@ -71,7 +72,8 @@ const Emoji = styled.h2`
 
 const mapDispatchToProps = dispatch => {
    return {
-      popPopup: () => dispatch(Actions.popPopup())
+      popPopup: () => dispatch(Actions.popPopup()),
+      updateData: data => dispatch(ApiActions.updateData(data)),
    };
 };
 
@@ -79,12 +81,34 @@ class ItemMover extends Component {
    handleClick = onClick => {
       this.props.popPopup();
       setTimeout(() => {
-         typeof onClick === "function" && onClick();
+         typeof onClick === 'function' && onClick();
       }, 250);
    };
 
+   handleMove = to => {
+      console.log('Moving to ', to);
+      let { data, trailingPath, item } = this.props;
+
+      // We need to also move everything nested under the current item.
+      let nestedItems = data;
+      for (let item of trailingPath) {
+         nestedItems = nestedItems[item];
+      }
+
+      // 'to' is the path to the new spot in the data
+      let curSpot = data;
+      for (let spot of to) {
+         curSpot = curSpot[spot];
+      }
+      curSpot[item] = nestedItems[item];
+      delete nestedItems[item];
+
+      this.props.updateData(data);
+      this.props.popPopup();
+   };
+
    render() {
-      const { index, closing } = this.props;
+      const { item, index, closing } = this.props;
 
       return (
          <Container index={index}>
@@ -93,8 +117,8 @@ class ItemMover extends Component {
                <Header>
                   <Emoji>🗄</Emoji>
                   <div>
-                     <Title>Move items</Title>
-                     <Subtitle>We'll need a bit more from you first</Subtitle>
+                     <Title>Move "{item}"</Title>
+                     <Subtitle>{'Select the directory to move it to'}</Subtitle>
                   </div>
                </Header>
                <Explorer
@@ -102,14 +126,15 @@ class ItemMover extends Component {
                   data={this.props.data}
                   height="80%"
                   width="auto"
+                  nonLeafOnly
+                  onChange={this.handleMove}
                />
             </Modal>
          </Container>
       );
    }
 }
-
 export default connect(
    null,
-   mapDispatchToProps
+   mapDispatchToProps,
 )(ItemMover);

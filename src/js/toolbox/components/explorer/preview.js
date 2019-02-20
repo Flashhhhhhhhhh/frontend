@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
+   position: relative;
    display: flex;
    flex-direction: column;
    align-items: center;
@@ -24,22 +25,27 @@ const Title = styled.h3`
 `;
 
 const Text = styled.h3`
-   max-width: 80%;
+   width: 80%;
+   margin: 0;
    font-weight: 300;
 `;
 
 class Preview extends Component {
    render() {
+      const { data } = this.props;
+
+      console.log(data);
+
       return (
          <Container>
             <Pupper>
                <img alt="pupper" src="images/pupper.jpg" />
             </Pupper>
             <Title>Good Boye</Title>
-            <Text>
-               Meet the rarest pupper. He's an example of what we all should
-               strive to be.
-            </Text>
+            {data.map(
+               item =>
+                  item && <Text key={item.value}>{item && item.value}</Text>,
+            )}
          </Container>
       );
    }
