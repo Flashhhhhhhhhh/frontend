@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { pushView } from "../actions";
 import { Explorer } from "../../toolbox";
-import data from './data.json'
 
 const Container = styled.div`
    display: flex;
@@ -19,29 +18,10 @@ const Title = styled.div`
    font-weight: 900;
 `;
 
-class VisualizerView extends Component {
-   static get metadata() {
-      return {
-         name: "Visualizer"
-      };
-   }
-
-   render() {
-      return (
-         <Container>
-            <Title>{this.props.dataset.name}</Title>
-            <Explorer
-               id={1}
-               data={data}
-            />
-         </Container>
-      );
-   }
-}
-
 const mapStateToProps = state => {
    return {
-      viewState: state.viewState
+      viewState: state.viewState,
+      apiState: state.apiState,
    };
 };
 
@@ -50,6 +30,30 @@ const mapDispatchToProps = dispatch => {
       pushView: view => dispatch(pushView(view))
    };
 };
+
+class VisualizerView extends Component {
+   static get metadata() {
+      return {
+         name: "Classifier"
+      };
+   }
+
+   render() {
+      const { apiState } = this.props;
+      const { data, refreshCount } = apiState;
+
+      return (
+         <Container>
+            <Title>Dataset</Title>
+            <Explorer
+               key={`visualizer-${refreshCount}`}
+               id={1}
+               data={data}
+            />
+         </Container>
+      );
+   }
+}
 
 export default connect(
    mapStateToProps,

@@ -10,6 +10,7 @@ const Container = styled.div`
    align-items: center;
    height: 4em;
    border-bottom: 1px solid ${color.gray[3]};
+   box-sizing: border-box;
 `;
 
 const Input = styled.input`

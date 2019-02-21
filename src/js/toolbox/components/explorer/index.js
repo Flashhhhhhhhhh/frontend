@@ -12,8 +12,8 @@ const { color } = constants;
 const Container = styled.div`
    display: flex;
    flex-direction: column;
-   height: 70vh;
-   width: 80%;
+   height: ${props => props.height || "70vh"};
+   width: ${props => props.width || "80%"};
    max-width: 70em;
    background: white;
    margin: 1em auto;
@@ -139,12 +139,12 @@ class ExplorerComponent extends Component {
    };
 
    render() {
-      const { id } = this.props;
+      const { id, width, height, nonLeafOnly } = this.props;
       const { leafSelected, path } = this.state;
       const curItem = path[path.length - 1];
 
       return (
-         <Container>
+         <Container width={width} height={height}>
             <Search onChange={this.handleSearch} />
             <Explorer
                id={`explorer-${id}`}
@@ -154,8 +154,8 @@ class ExplorerComponent extends Component {
             />
             <ActionButtonContainer>
                <Button
-                  disabled={!leafSelected}
-                  onClick={() => alert("Selected " + curItem)}
+               disabled={nonLeafOnly ? !curItem || leafSelected : !leafSelected}
+                  onClick={() => this.props.onChange(path)}
                   design="primary"
                >
                   Select
@@ -164,6 +164,11 @@ class ExplorerComponent extends Component {
          </Container>
       );
    }
+}
+
+ExplorerComponent.defaultProps = {
+   nonLeafOnly: false,
+   onChange: () => {}
 }
 
 export default ExplorerComponent;
