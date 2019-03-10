@@ -7,10 +7,11 @@ import Dropzone from 'react-dropzone';
 import Welcome from './welcome';
 import Files from './files';
 import UploadButton from './upload_button';
-import data from '../visualizer/data.json';
+import data from '../classifier/data.json';
 import * as ApiActions from '../../api/actions';
+import { Button } from '../../toolbox';
 
-const apiUrl = 'http://ec2-54-86-77-144.compute-1.amazonaws.com:5001/upload';
+const apiUrl = 'http://ec2-54-86-77-144.compute-1.amazonaws.com:5004/upload';
 
 const Container = styled.div`
    display: flex;
@@ -32,6 +33,24 @@ const MainContainer = styled.div`
    margin: auto;
    max-width: 50em;
    max-height: 80em;
+`;
+
+const ErrorContainer = styled.div`
+   max-width: 30em;
+   max-height: 30em;
+   margin: auto;
+   animation: fadeIn 0.5s;
+
+   h3 {
+      font-size: 2rem;
+      margin: 0;
+   }
+
+   h5 {
+      font-size: 1.3rem;
+      font-weight: 300;
+      margin: 24px 0 24px 0;
+   }
 `;
 
 const LowerContainer = styled.div`
@@ -66,6 +85,7 @@ class MainView extends Component {
       fileStack: [],
       uploading: false,
       showLoader: false,
+      error: false,
    };
 
    static get metadata() {
@@ -75,29 +95,11 @@ class MainView extends Component {
       };
    }
 
-   makeRequest = ({ url, data }) => {
-      return new Promise(function(resolve, reject) {
-         fetch(url, data)
-            .then(response => {
-               console.log(response);
-               response.json().then(data => {
-                  if (response.status >= 300) {
-                     reject(data.message);
-                  }
-                  resolve(data);
-               });
-            })
-            .catch(e => {
-               reject(Error(e));
-            });
-      });
-   };
-
    viewData = dataset => {
       this.props.updateData(dataset);
       this.props.pushView({
-         name: 'VisualizerView',
-         props: {}
+         name: 'ClassifierView',
+         props: {},
       });
    };
 
@@ -118,6 +120,7 @@ class MainView extends Component {
 
    sendFiles = () => {
       this.setState({
+         error: false,
          uploading: true,
       });
       setTimeout(() => {
@@ -131,15 +134,15 @@ class MainView extends Component {
          });
 
          req.then(response => {
-            setTimeout(() => {
-               this.viewData(response.body);
-               this.setState({
-                  uploading: false,
-                  showLoader: false,
-               });
-            }, 3000);
+            this.viewData(response.body);
+            this.setState({
+               uploading: false,
+               showLoader: false,
+            });
+         }).catch(error => {
+            this.setState({ error });
          });
-      }, 500);
+      }, 1000);
    };
 
    componentDidMount() {
@@ -148,7 +151,7 @@ class MainView extends Component {
    }
 
    render() {
-      const { fileStack, uploading, showLoader } = this.state;
+      const { fileStack, uploading, showLoader, error } = this.state;
       const hasFiles = fileStack.length > 0;
 
       return (
@@ -158,23 +161,35 @@ class MainView extends Component {
                activeStyle={activeStyle}
                multiple={true}
                style={dropzoneStyle}
-               disableClick>
-               <MainContainer>
-                  <Welcome isReady={hasFiles} uploading={uploading} />
-                  <LowerContainer isOpen={hasFiles}>
-                     <Files
-                        fileStack={fileStack}
-                        uploading={uploading}
-                        showLoader={showLoader}
-                        onDelete={this.deleteFile}
-                     />
-                     <UploadButton
-                        fileStack={fileStack}
-                        uploading={uploading}
-                        onClick={this.sendFiles}
-                     />
-                  </LowerContainer>
-               </MainContainer>
+               disableClick={hasFiles}>
+               {error ? (
+                  <ErrorContainer>
+                     <h3>{'Unexpected Error'}</h3>
+                     <h5>{error.message}</h5>
+                     <Button
+                        design="primary"
+                        onClick={() => window.location.reload()}>
+                        Reload Page
+                     </Button>
+                  </ErrorContainer>
+               ) : (
+                  <MainContainer>
+                     <Welcome isReady={hasFiles} uploading={uploading} />
+                     <LowerContainer isOpen={hasFiles}>
+                        <Files
+                           fileStack={fileStack}
+                           uploading={uploading}
+                           showLoader={showLoader}
+                           onDelete={this.deleteFile}
+                        />
+                        <UploadButton
+                           fileStack={fileStack}
+                           uploading={uploading}
+                           onClick={this.sendFiles}
+                        />
+                     </LowerContainer>
+                  </MainContainer>
+               )}
             </Dropzone>
          </Container>
       );

@@ -9,7 +9,6 @@ const Container = styled.div`
    display: flex;
    align-items: center;
    height: 4em;
-   border-bottom: 1px solid ${color.gray[3]};
    box-sizing: border-box;
 `;
 

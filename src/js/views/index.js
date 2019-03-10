@@ -1,2 +1,2 @@
 export { default as MainView } from './main';
-export { default as VisualizerView } from './visualizer';
+export { default as ClassifierView } from './classifier';

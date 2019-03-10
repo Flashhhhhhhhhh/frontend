@@ -12,7 +12,7 @@ const { color } = constants;
 const Container = styled.div`
    display: flex;
    flex-direction: column;
-   height: ${props => props.height || "70vh"};
+   height: ${props => props.height || "60vh"};
    width: ${props => props.width || "80%"};
    max-width: 70em;
    background: white;

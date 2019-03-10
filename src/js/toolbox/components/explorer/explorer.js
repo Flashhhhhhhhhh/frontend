@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import styled from 'styled-components';
 import { connect } from "react-redux";
 import { Icon } from "../../";
 import Item from "./item";
@@ -11,12 +12,16 @@ import * as Actions from "../../../popups/actions";
 
 const { color } = constants;
 
+const Container = styled.div`
+   border-top: 1px solid ${color.gray[3]};
+`;
+
 class Explorer extends Component {
    render() {
       const { id, data, path, onChange, width, height } = this.props;
 
       return (
-         <div
+         <Container
             id={id}
             style={{
                display: "flex",
@@ -32,7 +37,7 @@ class Explorer extends Component {
                leadingPath={path}
                onChange={onChange}
             />
-         </div>
+         </Container>
       );
    }
 }
@@ -100,10 +105,10 @@ const RecursiveExplorer = ({
 
    return (
       <React.Fragment>
-         <Column key={data} showPlus>
+         <Column key={data} showPlus tag={data.tag}>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
-               return name === 'tag' || (
+               return name === 'tag' || name === 'id' || (
                   <Item
                      key={name}
                      isSelected={isSelected}

@@ -42,7 +42,8 @@ class Column extends Component {
    };
 
    render() {
-      const { showPlus } = this.props;
+      const { showPlus, tag } = this.props;
+      console.log(tag && tag.length);
 
       return (
          <Container>
