@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { pushView } from '../actions';
-import { Explorer, Button } from '../../toolbox';
+import styled, { css } from 'styled-components';
+import * as Actions from '../actions';
+import { Explorer, Spinner, Button } from '../../toolbox';
 
 const Container = styled.div`
    display: flex;
@@ -16,6 +16,8 @@ const TextContainer = styled.div`
    margin: 0 auto;
    width: 80%;
    max-width: 70em;
+   transition: all 0.3s;
+   opacity: ${props => props.isHidden ? 0 : 1};
 `;
 
 const Title = styled.h3`
@@ -30,6 +32,39 @@ const Text = styled.h3`
    margin: 0;
 `;
 
+const ExplorerContainer = styled.div`
+   margin: 1em;
+   height: 60vh;
+   width: 80%;
+   transition: all 0.3s ease;
+
+   ${props =>
+      props.scalingDown &&
+      css`
+         transform: scale(0.4);
+      `}
+
+   ${props =>
+      props.slidingUp &&
+      css`
+         transform: scale(0.4) translateY(-100%);
+         opacity: 0;
+      `}
+`;
+
+const LoadingContainer = styled.div`
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   margin: auto;
+   height: 4em;
+   width: 4em;
+`;
+
+const ButtonContainer = styled.div``;
+
 const mapStateToProps = state => {
    return {
       viewState: state.viewState,
@@ -39,7 +74,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
    return {
-      pushView: view => dispatch(pushView(view)),
+      pushView: view => dispatch(Actions.pushView(view)),
    };
 };
 
@@ -50,23 +85,56 @@ class ClassifierView extends Component {
       };
    }
 
+   state = {
+      scalingDown: false,
+      slidingUp: false,
+   };
+
+   uploadData = () => {
+      this.setState({ scalingDown: true });
+      setTimeout(() => {
+         this.setState({ slidingUp: true });
+         setTimeout(() => {
+            this.setState({ uploading: true });
+         }, 300);
+      }, 500);
+   };
+
    render() {
       const { apiState } = this.props;
       const { data, refreshCount } = apiState;
-      console.log(data);
+      const { scalingDown, slidingUp, uploading } = this.state;
 
       return (
          <Container>
-            <TextContainer>
-               <Title>{"View & Edit"}</Title>
+            <TextContainer isHidden={slidingUp || uploading}>
+               <Title>{'View & Edit'}</Title>
                <Text>
                   {
                      "Here's the data we've created for you. Take some time to move, rename, or mark items as sensitive."
                   }
                </Text>
             </TextContainer>
-            <Explorer key={`visualizer-${refreshCount}`} id={1} data={data} />
-            <Button design="primary">Upload Finalized Data</Button>
+            <ExplorerContainer {...this.state}>
+               <Explorer
+                  key={`visualizer-${refreshCount}`}
+                  id={1}
+                  data={data}
+               />
+            </ExplorerContainer>
+            {uploading && (
+               <LoadingContainer>
+                  <Spinner />
+               </LoadingContainer>
+            )}
+            <ButtonContainer>
+               <Button
+                  disabled={uploading}
+                  onClick={this.uploadData}
+                  design="primary">
+                  {uploading ? 'Uploading...' : 'Upload Finalized Data'}
+               </Button>
+            </ButtonContainer>
          </Container>
       );
    }

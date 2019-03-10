@@ -1,14 +1,14 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { connect } from "react-redux";
-import { Icon } from "../../";
-import Item from "./item";
-import Column from "./column";
-import Spacer from "./spacer";
-import Truncate from "./truncate";
-import Preview from "./preview";
-import constants from "../../constants";
-import * as Actions from "../../../popups/actions";
+import { connect } from 'react-redux';
+import { Icon } from '../../';
+import Item from './item';
+import Column from './column';
+import Spacer from './spacer';
+import Truncate from './truncate';
+import Preview from './preview';
+import constants from '../../constants';
+import * as Actions from '../../../popups/actions';
 
 const { color } = constants;
 
@@ -18,22 +18,20 @@ const Container = styled.div`
 
 class Explorer extends Component {
    render() {
-      const { id, data, path, onChange, width, height } = this.props;
+      const { id, data, path, onChange, hideOptions } = this.props;
 
       return (
          <Container
             id={id}
             style={{
-               display: "flex",
-               width,
-               height,
-               overflowX: "auto"
-            }}
-         >
+               display: 'flex',
+               overflowX: 'auto',
+            }}>
             <ConnectedRecursiveExplorer
                key={data}
                data={data}
                fullData={data}
+               hideOptions={hideOptions}
                leadingPath={path}
                onChange={onChange}
             />
@@ -42,13 +40,8 @@ class Explorer extends Component {
    }
 }
 
-Explorer.defaultProps = {
-   width: "100%",
-   height: "100%"
-};
-
 const mapDispatchToProps = dispatch => ({
-   pushPopup: popup => dispatch(Actions.pushPopup(popup))
+   pushPopup: popup => dispatch(Actions.pushPopup(popup)),
 });
 
 const RecursiveExplorer = ({
@@ -56,8 +49,9 @@ const RecursiveExplorer = ({
    fullData,
    leadingPath,
    trailingPath,
+   hideOptions,
    onChange,
-   pushPopup
+   pushPopup,
 }) => {
    if (Array.isArray(data)) {
       return (
@@ -69,37 +63,44 @@ const RecursiveExplorer = ({
 
    const setupOptionsMenu = (e, name) => {
       pushPopup({
-         name: "Options",
+         name: 'Options',
          props: {
             mousePos: { x: e.screenX, y: e.screenY },
             options: [
                {
-                  label: "Move",
-                  icon: "move",
-                  onClick: () => pushPopup({
-                     name: "ItemMover",
-                     props: {
-                        data: fullData,
-                        leadingPath,
-                        trailingPath,
-                        item: name
-                     }
-                  })
+                  label: 'Move',
+                  icon: 'move',
+                  onClick: () =>
+                     pushPopup({
+                        name: 'ItemMover',
+                        props: {
+                           data: fullData,
+                           leadingPath,
+                           trailingPath,
+                           item: name,
+                        },
+                     }),
                },
                {
-                  label: "Rename",
-                  icon: "edit"
+                  label: 'Rename',
+                  icon: 'edit',
                },
                {
-                  label: "Lock",
-                  icon: "lock"
+                  label: 'Lock',
+                  icon: 'lock',
                },
                {
-                  label: "Delete",
-                  icon: "trash"
-               }
-            ]
-         }
+                  label: 'Delete',
+                  icon: 'trash',
+               },
+            ],
+         },
+      });
+   };
+
+   const prettify = str => {
+      return str.replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
+         return (prep && ' ') + letter.toUpperCase();
       });
    };
 
@@ -108,29 +109,32 @@ const RecursiveExplorer = ({
          <Column key={data} showPlus tag={data.tag}>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
-               return name === 'tag' || name === 'id' || (
-                  <Item
-                     key={name}
-                     isSelected={isSelected}
-                     onClick={() => onChange(trailingPath.concat(name))}
-                  >
-                     <Truncate>{name}</Truncate>
-                     <Spacer />
-                     <Icon
-                        className="options-button"
-                        name="more-horizontal"
-                        size={20}
-                        color={isSelected ? "white" : color.gray[5]}
-                        onClick={e => setupOptionsMenu(e, name)}
-                     />
-                     {Array.isArray(data[name]) ? null : (
-                        <Icon
-                           name="chevron-right"
-                           size={20}
-                           color={isSelected ? "white" : color.gray[5]}
-                        />
-                     )}
-                  </Item>
+               return (
+                  name === 'tag' || (
+                     <Item
+                        key={name}
+                        isSelected={isSelected}
+                        onClick={() => onChange(trailingPath.concat(name))}>
+                        <Truncate>{prettify(name)}</Truncate>
+                        <Spacer />
+                        {hideOptions || (
+                           <Icon
+                              className="options-button"
+                              name="more-horizontal"
+                              size={20}
+                              color={isSelected ? 'white' : color.gray[5]}
+                              onClick={e => setupOptionsMenu(e, name)}
+                           />
+                        )}
+                        {Array.isArray(data[name]) ? null : (
+                           <Icon
+                              name="chevron-right"
+                              size={20}
+                              color={isSelected ? 'white' : color.gray[5]}
+                           />
+                        )}
+                     </Item>
+                  )
                );
             })}
          </Column>
@@ -140,6 +144,7 @@ const RecursiveExplorer = ({
                data={data[leadingPath[0]]}
                leadingPath={leadingPath.slice(1)}
                trailingPath={trailingPath.concat(leadingPath.slice(0, 1))}
+               hideOptions={hideOptions}
                onChange={onChange}
             />
          ) : null}
@@ -149,11 +154,11 @@ const RecursiveExplorer = ({
 
 const ConnectedRecursiveExplorer = connect(
    null,
-   mapDispatchToProps
+   mapDispatchToProps,
 )(RecursiveExplorer);
 
 RecursiveExplorer.defaultProps = {
-   trailingPath: []
+   trailingPath: [],
 };
 
 export default Explorer;
