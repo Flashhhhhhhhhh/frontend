@@ -4,6 +4,7 @@ import Header from "./components/header";
 import styled, { css } from "styled-components";
 import * as views from "./views";
 import PopupContainer from './popups/popup_container';
+import WelcomeScreen from './components/welcome';
 
 const ViewContainer = styled.div`
    position: relative;
@@ -18,13 +19,7 @@ const View = styled.div`
    transition: all 0.35s ease;
    background: #e9eef4;
    overflow: auto;
-
-   ${props =>
-      props.index === props.numViews - 1 &&
-      !props.isMain &&
-      css`
-         animation: slideIn 0.35s ease;
-      `}
+   animation: slideIn 0.35s ease;
 
    ${props => props.curView && props.goingBack && css`
       animation: slideOut 0.35s ease;
@@ -103,6 +98,7 @@ class Flash extends Component {
 
       return (
          <div>
+            <WelcomeScreen />
             <Header />
             <ViewContainer>
                {viewStack.map((view, index) => {
@@ -112,7 +108,7 @@ class Flash extends Component {
                         numViews={viewStack.length}
                         isMain={view.name === "MainView"}
                         curView={index === viewStack.length-1}
-                        belowCurView={index === viewStack.length-2}
+                        belowCurView={index <= viewStack.length-2}
                         index={index}
                         goingBack={goingBack}
                      >

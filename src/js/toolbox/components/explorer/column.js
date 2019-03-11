@@ -8,11 +8,21 @@ import * as Actions from "../../../popups/actions";
 const { color } = constants;
 
 const Container = styled.div`
+   z-index: ${props => 100 - props.index};
    width: 240px;
    height: 100%;
    flex: 0 0 auto;
    border-right: 1px solid ${color.gray[4]};
    overflow-y: auto;
+   animation: showColumn 0.15s;
+   background: white;
+
+   @keyframes showColumn {
+      0% {
+         transform: translateX(-240px);
+         opacity: 0;
+      }
+   }
 `;
 
 const PlusButton = styled.div`
@@ -42,11 +52,10 @@ class Column extends Component {
    };
 
    render() {
-      const { showPlus, tag } = this.props;
-      console.log(tag && tag.length);
+      const { showPlus, index } = this.props;
 
       return (
-         <Container>
+         <Container index={index}>
             {this.props.children}
             {showPlus && (
                <PlusButton onClick={this.addDirectory}>

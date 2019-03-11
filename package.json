@@ -2,7 +2,7 @@
   "name": "flash",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://tannerv.com/Flash",
+  "homepage": "http://tannerv.com/MarkLogic",
   "dependencies": {
     "feather-icons": "^4.10.0",
     "fuse.js": "^3.3.0",

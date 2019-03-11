@@ -7,7 +7,6 @@ import Dropzone from 'react-dropzone';
 import Welcome from './welcome';
 import Files from './files';
 import UploadButton from './upload_button';
-import data from '../classifier/data.json';
 import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
 
@@ -33,6 +32,8 @@ const MainContainer = styled.div`
    margin: auto;
    max-width: 50em;
    max-height: 80em;
+   transition: opacity 0.3s;
+   opacity: ${props => props.isHidden && 0};
 `;
 
 const ErrorContainer = styled.div`
@@ -122,11 +123,9 @@ class MainView extends Component {
       this.setState({
          error: false,
          uploading: true,
+         showLoader: true,
       });
       setTimeout(() => {
-         this.setState({
-            showLoader: true,
-         });
          const { fileStack } = this.state;
          const req = request.post(apiUrl);
          fileStack.forEach(file => {
@@ -134,11 +133,19 @@ class MainView extends Component {
          });
 
          req.then(response => {
-            this.viewData(response.body);
             this.setState({
-               uploading: false,
-               showLoader: false,
+               done: true,
             });
+            setTimeout(() => {
+               this.viewData(response.body);
+               setTimeout(() => {
+                  this.setState({
+                     done: false,
+                     uploading: false,
+                     showLoader: false,
+                  });
+               }, 300);
+            }, 300);
          }).catch(error => {
             this.setState({ error });
          });
@@ -151,7 +158,7 @@ class MainView extends Component {
    }
 
    render() {
-      const { fileStack, uploading, showLoader, error } = this.state;
+      const { fileStack, uploading, showLoader, error, done } = this.state;
       const hasFiles = fileStack.length > 0;
 
       return (
@@ -173,12 +180,17 @@ class MainView extends Component {
                      </Button>
                   </ErrorContainer>
                ) : (
-                  <MainContainer>
-                     <Welcome isReady={hasFiles} uploading={uploading} />
+                  <MainContainer isHidden={done}>
+                     <Welcome
+                        isReady={hasFiles}
+                        uploading={uploading}
+                        done={done}
+                     />
                      <LowerContainer isOpen={hasFiles}>
                         <Files
                            fileStack={fileStack}
                            uploading={uploading}
+                           done={done}
                            showLoader={showLoader}
                            onDelete={this.deleteFile}
                         />

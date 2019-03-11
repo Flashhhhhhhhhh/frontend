@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Icon } from "../../";
-import constants from "../../constants";
-
-const { color } = constants;
 
 const Container = styled.div`
    display: flex;

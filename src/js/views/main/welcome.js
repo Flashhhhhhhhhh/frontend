@@ -7,6 +7,7 @@ const Container = styled.div`
    align-items: center;
    flex: 1;
    max-width: 33em;
+   margin-bottom: ${props => props.isReady ? 0 : '15%'};
    max-height: ${props => props.isReady ? '20%' : '55%'};
    transition: all 0.3s ease;
 `;
@@ -39,14 +40,6 @@ const Text = styled.h3`
    color: #2c4358;
    font-size: 23px;
    font-weight: 500;
-   animation: slideUp 0.5s;
-
-   @keyframes slideUp {
-      0% {
-         transform: translateX(-10%);
-         opacity: 0;
-      }
-   }
 `;
 
 const Welcome = ({ isReady, uploading }) => {

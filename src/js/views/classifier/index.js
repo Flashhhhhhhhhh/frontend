@@ -17,7 +17,7 @@ const TextContainer = styled.div`
    width: 80%;
    max-width: 70em;
    transition: all 0.3s;
-   opacity: ${props => props.isHidden ? 0 : 1};
+   opacity: ${props => (props.isHidden ? 0 : 1)};
 `;
 
 const Title = styled.h3`
@@ -36,6 +36,7 @@ const ExplorerContainer = styled.div`
    margin: 1em;
    height: 60vh;
    width: 80%;
+   max-width: 70em;
    transition: all 0.3s ease;
 
    ${props =>
@@ -96,6 +97,21 @@ class ClassifierView extends Component {
          this.setState({ slidingUp: true });
          setTimeout(() => {
             this.setState({ uploading: true });
+            setTimeout(() => {
+               this.props.pushView({
+                  name: 'VisualizerView',
+                  props: {
+                     data: this.props.data,
+                  },
+               });
+               setTimeout(() => {
+                  this.setState({
+                     uploading: false,
+                     scalingDown: false,
+                     slidingUp: false,
+                  });
+               }, 300);
+            }, 500);
          }, 300);
       }, 500);
    };
@@ -103,7 +119,7 @@ class ClassifierView extends Component {
    render() {
       const { apiState } = this.props;
       const { data, refreshCount } = apiState;
-      const { scalingDown, slidingUp, uploading } = this.state;
+      const { slidingUp, uploading } = this.state;
 
       return (
          <Container>

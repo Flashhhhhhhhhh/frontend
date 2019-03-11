@@ -34,7 +34,7 @@ const Cover = styled.div`
 
 const Modal = styled.div`
    position: relative;
-   height: 10em;
+   height: 12em;
    width: 30em;
    max-width: 100%;
    max-height: 100%;
@@ -78,12 +78,26 @@ const TextInput = styled.input`
    border-radius: 4px;
    border: 1px solid ${color.gray[3]};
    outline: none;
-   margin-right: 16px;
+   width: 100%;
 `;
 
 const InputContainer = styled.div`
    display: flex;
    margin: 15px 74px 0;
+`;
+
+const ButtonContainer = styled.div`
+   display: flex;
+   margin: 15px 74px 0;
+   justify-content: flex-end;
+
+   > button {
+      margin-left: 15px;
+
+      :first-child {
+         background-color: #f18387;
+      }
+   }
 `;
 
 const mapDispatchToProps = dispatch => {
@@ -92,7 +106,7 @@ const mapDispatchToProps = dispatch => {
    };
 };
 
-class DirAdder extends Component {
+class DownloadManager extends Component {
    state = {
       text: '',
    };
@@ -108,8 +122,37 @@ class DirAdder extends Component {
       this.setState({ text: e.target.value });
    };
 
-   createDir = () => {
-   }
+   downloadJson = () => {
+      const { text } = this.state;
+      const objectData = this.props.data;
+
+      let filename = `${text}.json`;
+      let contentType = 'application/json;charset=utf-8;';
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+         var blob = new Blob(
+            [decodeURIComponent(encodeURI(JSON.stringify(objectData)))],
+            { type: contentType },
+         );
+         navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+         var a = document.createElement('a');
+         a.download = filename;
+         a.href =
+            'data:' +
+            contentType +
+            ',' +
+            encodeURIComponent(JSON.stringify(objectData));
+         a.target = '_blank';
+         document.body.appendChild(a);
+         a.click();
+         document.body.removeChild(a);
+      }
+      this.props.popPopup();
+   };
+
+   downloadCsv = () => {
+      this.props.popPopup();
+   };
 
    render() {
       const { index, closing } = this.props;
@@ -120,20 +163,33 @@ class DirAdder extends Component {
             <Cover closing={closing} onClick={this.handleClick} />
             <Modal closing={closing}>
                <Header>
-                  <Emoji><span role="img" aria-label="file">📂</span></Emoji>
+                  <Emoji><span role="img" aria-label="file">💻</span></Emoji>
                   <div>
-                     <Title>Add a Category</Title>
-                     <Subtitle>Enter a name below</Subtitle>
+                     <Title>Export Data</Title>
+                     <Subtitle>Give your file a name</Subtitle>
                   </div>
                </Header>
                <InputContainer>
                   <TextInput
                      value={text}
                      onChange={this.updateText}
-                     placeholder="Category name"
+                     placeholder="File name"
                   />
-                  <Button design="primary" disabled={text.length === 0} onClick={this.createDir}>Create</Button>
                </InputContainer>
+               <ButtonContainer>
+                  <Button
+                     design="primary"
+                     disabled={text.length === 0}
+                     onClick={this.downloadJson}>
+                     Download CSV
+                  </Button>
+                  <Button
+                     design="primary"
+                     disabled={text.length === 0}
+                     onClick={this.downloadJson}>
+                     Download JSON
+                  </Button>
+               </ButtonContainer>
             </Modal>
          </Container>
       );
@@ -142,4 +198,4 @@ class DirAdder extends Component {
 export default connect(
    null,
    mapDispatchToProps,
-)(DirAdder);
+)(DownloadManager);

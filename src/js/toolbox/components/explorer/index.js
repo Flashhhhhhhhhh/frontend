@@ -19,9 +19,10 @@ const Container = styled.div`
    box-sizing: border-box;
    border-radius: 8px;
    overflow: hidden;
-   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.1) 0px 4px 16px;
+   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
 `;
+
+//rgba(0, 0, 0, 0.1) 0px 4px 16px;
 
 const ActionButtonContainer = styled.div`
    display: flex;
@@ -61,7 +62,7 @@ class ExplorerComponent extends Component {
 
       // Recursively create a list of items for each child.
       const childItems = Object.keys(tree).map(itemName => {
-         const childTree = tree[itemName];
+         const childTree = itemName === "tag" ? false : tree[itemName];
          const childPath = [...path, itemName];
          return this.createItemList(childTree, itemName, childPath);
       });
@@ -93,7 +94,6 @@ class ExplorerComponent extends Component {
             // Prefer more general categories (which have a smaller path length).
             result.score * (1 + 0.1 * result.item.path.length)
       );
-      console.log(bestResult);
 
       return {
          path: bestResult ? bestResult.item.path : []
