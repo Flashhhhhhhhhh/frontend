@@ -91,7 +91,7 @@ export default class WelcomScreen extends Component {
          this.setState({
             showExtension: true,
          });
-      }, 800);
+      }, 600);
       setTimeout(() => {
          this.setState({ isClosing: true });
       }, 1700);

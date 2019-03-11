@@ -5,7 +5,6 @@ const initialState = {
 const popupReducer = (state = initialState, action) => {
    switch (action.type) {
       case 'PUSH_POPUP':
-      console.log(action);
          return {
             ...state,
             popupStack: [...state.popupStack, action.popup],

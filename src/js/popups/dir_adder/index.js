@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button, constants } from '../../toolbox';
-import * as Actions from '../../popups/actions';
+import * as PopupActions from '../../popups/actions';
+import * as ApiActions from '../../api/actions';
 
 const { color, animation } = constants;
 const { scaleInBounce, scaleOutBounce } = animation;
@@ -86,9 +87,14 @@ const InputContainer = styled.div`
    margin: 15px 74px 0;
 `;
 
+const mapStateToProps = state => ({
+   apiState: state.apiState,
+});
+
 const mapDispatchToProps = dispatch => {
    return {
-      popPopup: () => dispatch(Actions.popPopup()),
+      popPopup: () => dispatch(PopupActions.popPopup()),
+      updateData: data => dispatch(ApiActions.updateData(data)),
    };
 };
 
@@ -109,7 +115,32 @@ class DirAdder extends Component {
    };
 
    createDir = () => {
-   }
+      const { apiState, path } = this.props;
+      const { data } = apiState;
+
+      let curSpot = data;
+      let prevSpot = data;
+      for (let spot of path) {
+         curSpot = curSpot[spot];
+      }
+
+      curSpot[this.state.text] = {};
+      console.log(prevSpot);
+      if (!prevSpot['tag']) {
+         prevSpot['tag'] = [{}];
+      }
+
+      const createTag = (prevSpot['tag'] && prevSpot['tag'][0]['create']) || [];
+      prevSpot['tag'][0]['create'] = [
+         ...createTag,
+         this.state.text,
+      ];
+      let tag = [{}];
+      curSpot['tag'] = tag;
+
+      this.props.updateData(data);
+      this.props.popPopup();
+   };
 
    render() {
       const { index, closing } = this.props;
@@ -120,7 +151,11 @@ class DirAdder extends Component {
             <Cover closing={closing} onClick={this.handleClick} />
             <Modal closing={closing}>
                <Header>
-                  <Emoji><span role="img" aria-label="file">📂</span></Emoji>
+                  <Emoji>
+                     <span role="img" aria-label="file">
+                        📂
+                     </span>
+                  </Emoji>
                   <div>
                      <Title>Add a Category</Title>
                      <Subtitle>Enter a name below</Subtitle>
@@ -130,9 +165,15 @@ class DirAdder extends Component {
                   <TextInput
                      value={text}
                      onChange={this.updateText}
+                     autoFocus
                      placeholder="Category name"
                   />
-                  <Button design="primary" disabled={text.length === 0} onClick={this.createDir}>Create</Button>
+                  <Button
+                     design="primary"
+                     disabled={text.length === 0}
+                     onClick={this.createDir}>
+                     Create
+                  </Button>
                </InputContainer>
             </Modal>
          </Container>
@@ -140,6 +181,6 @@ class DirAdder extends Component {
    }
 }
 export default connect(
-   null,
+   mapStateToProps,
    mapDispatchToProps,
 )(DirAdder);

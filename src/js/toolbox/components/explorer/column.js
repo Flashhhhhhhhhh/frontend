@@ -45,9 +45,13 @@ const mapDispatchToProps = dispatch => ({
 
 class Column extends Component {
    addDirectory = () => {
+      const { path } = this.props;
+
       this.props.pushPopup({
          name: "DirAdder",
-         props: {}
+         props: {
+            path
+         }
       });
    };
 
