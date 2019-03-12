@@ -4,6 +4,8 @@
   "private": true,
   "homepage": "http://tannerv.com/MarkLogic",
   "dependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.10.0",
     "feather-icons": "^4.10.0",
     "fuse.js": "^3.3.0",
     "lodash": "^4.17.11",
