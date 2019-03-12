@@ -12,17 +12,17 @@ const { color } = constants;
 const Container = styled.div`
    display: flex;
    flex-direction: column;
-   height: ${props => props.height || "70vh"};
-   width: ${props => props.width || "80%"};
-   max-width: 70em;
+   height: 100%;
+   width: 100%;
    background: white;
-   margin: 1em auto;
    padding: 0 16px 8px 16px;
+   box-sizing: border-box;
    border-radius: 8px;
    overflow: hidden;
-   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px,
-      rgba(0, 0, 0, 0.1) 0px 4px 16px;
+   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
 `;
+
+//rgba(0, 0, 0, 0.1) 0px 4px 16px;
 
 const ActionButtonContainer = styled.div`
    display: flex;
@@ -62,7 +62,7 @@ class ExplorerComponent extends Component {
 
       // Recursively create a list of items for each child.
       const childItems = Object.keys(tree).map(itemName => {
-         const childTree = tree[itemName];
+         const childTree = itemName === "tag" ? false : tree[itemName];
          const childPath = [...path, itemName];
          return this.createItemList(childTree, itemName, childPath);
       });
@@ -94,7 +94,6 @@ class ExplorerComponent extends Component {
             // Prefer more general categories (which have a smaller path length).
             result.score * (1 + 0.1 * result.item.path.length)
       );
-      console.log(bestResult);
 
       return {
          path: bestResult ? bestResult.item.path : []
@@ -139,7 +138,7 @@ class ExplorerComponent extends Component {
    };
 
    render() {
-      const { id, width, height, nonLeafOnly } = this.props;
+      const { id, width, height, hideOptions, nonLeafOnly } = this.props;
       const { leafSelected, path } = this.state;
       const curItem = path[path.length - 1];
 
@@ -150,6 +149,7 @@ class ExplorerComponent extends Component {
                id={`explorer-${id}`}
                data={this.props.data}
                path={this.state.path}
+               hideOptions={hideOptions}
                onChange={this.updatePath}
             />
             <ActionButtonContainer>

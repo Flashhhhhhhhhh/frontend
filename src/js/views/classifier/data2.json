@@ -1,0 +1,22 @@
+{
+   "County Name": {
+      "Alameda": {
+         "Hours Type": {
+            "Management & Supervision": {
+               "Alameda Hospital": [
+                  {
+                     "Facilty #": 1051535
+                  }
+               ]
+            },
+            "Technician & Specialist": {
+               "Other Hospital": [
+                  {
+                     "Facilty #": 13241234
+                  }
+               ]
+            }
+         }
+      }
+   }
+}

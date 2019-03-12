@@ -4,11 +4,13 @@ import styled from 'styled-components';
 import OptionsMenu from './options';
 import DirAdder from './dir_adder';
 import ItemMover from './item_mover';
+import DownloadManager from './download_manager';
 
 const popups = {
    Options: <OptionsMenu />,
    DirAdder: <DirAdder />,
    ItemMover: <ItemMover />,
+   DownloadManager: <DownloadManager />,
 }
 
 const Container = styled.div``;

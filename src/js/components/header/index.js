@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import styled, { css } from "styled-components";
-import { popView } from "../../views/actions";
-import * as views from "../../views";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styled, { css } from 'styled-components';
+import { popView } from '../../views/actions';
+import * as views from '../../views';
 
 const Container = styled.div`
    z-index: 1;
@@ -49,8 +49,7 @@ const BackButton = styled.div`
       `};
 
    ${props =>
-      props.isBackButton &&
-      !props.goingBack &&
+      ((props.isBackButton && !props.goingBack) || props.isHidden) &&
       css`
          margin-top: 0;
          font-size: 16px;
@@ -69,27 +68,21 @@ const BackButton = styled.div`
       `};
 
    ${props =>
-      props.index < props.numViews - 2 &&
-      css`
-         margin-right: -100%;
-      `};
-
-   ${props =>
       props.goingBack &&
       props.isTitle &&
       css`
          animation: slideOut 0.35s;
       `}
 
-      ${props =>
-         props.isBackButton &&
-         props.goingBack &&
-         css`
-            .caret {
-               margin-right: -8px;
-               opacity: 0;
-            }
-         `}
+   ${props =>
+      props.isBackButton &&
+      props.goingBack &&
+      css`
+         .caret {
+            margin-right: -8px;
+            opacity: 0;
+         }
+      `}
 
    ${props =>
       props.isTitle &&
@@ -99,6 +92,13 @@ const BackButton = styled.div`
             opacity: 0;
          }
       `}
+
+   ${props =>
+      props.isHidden &&
+      !props.becomingBackButton &&
+      css`
+         margin-left: -100%;
+      `};
 `;
 
 class Header extends Component {
@@ -109,7 +109,7 @@ class Header extends Component {
 
       return {
          viewStack: goingBack ? prevState.viewStack : viewStack,
-         goingBack
+         goingBack,
       };
    }
 
@@ -120,7 +120,7 @@ class Header extends Component {
 
       this.state = {
          viewStack,
-         goingBack: false
+         goingBack: false,
       };
    }
 
@@ -131,7 +131,7 @@ class Header extends Component {
       setTimeout(() => {
          this.setState({
             viewStack,
-            goingBack: false
+            goingBack: false,
          });
       }, 300);
    }
@@ -148,16 +148,25 @@ class Header extends Component {
       return (
          <Container>
             {viewStack.map((view, index) => {
+               const isTitle = index === viewStack.length - 1;
+               const isBackButton = index === viewStack.length - 2;
+               const isHidden = index < viewStack.length - 2;
+
                return (
                   <BackButton
                      key={`back-to-${view.name}`}
                      numViews={viewStack.length}
-                     isTitle={index === viewStack.length - 1}
-                     isBackButton={index === viewStack.length - 2}
+                     isTitle={isTitle}
+                     isBackButton={isBackButton}
+                     isHidden={isHidden}
+                     becomingBackButton={isHidden && goingBack}
                      index={index}
                      goingBack={goingBack}
-                     onClick={index === viewStack.length - 2 ? this.props.popView : null}
-                  >
+                     onClick={
+                        index === viewStack.length - 2
+                           ? this.props.popView
+                           : null
+                     }>
                      <img alt="back" className="caret" src="images/back.svg" />
                      <h3>{views[viewStack[index].name].metadata.name}</h3>
                   </BackButton>
@@ -176,17 +185,17 @@ class Header extends Component {
 
 const mapStateToProps = state => {
    return {
-      viewState: state.viewState
+      viewState: state.viewState,
    };
 };
 
 const mapDispatchToProps = dispatch => {
    return {
-      popView: view => dispatch(popView(view))
+      popView: view => dispatch(popView(view)),
    };
 };
 
 export default connect(
    mapStateToProps,
-   mapDispatchToProps
+   mapDispatchToProps,
 )(Header);

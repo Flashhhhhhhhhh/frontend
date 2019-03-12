@@ -35,6 +35,9 @@ const Cover = styled.div`
 
 const Modal = styled.div`
    position: relative;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
    height: 40em;
    width: 60em;
    max-width: 90%;
@@ -70,6 +73,12 @@ const Emoji = styled.h2`
    margin: 14px 24px 0 0;
 `;
 
+const ExplorerContainer = styled.div`
+   height: 80%;
+   width: auto;
+   margin-top:
+`;
+
 const mapDispatchToProps = dispatch => {
    return {
       popPopup: () => dispatch(Actions.popPopup()),
@@ -100,10 +109,25 @@ class ItemMover extends Component {
       for (let spot of to) {
          curSpot = curSpot[spot];
       }
+
+      // Update the "move" tag to reflect the new position.
+      let tag = nestedItems[item].tag[0];
+      // If this item has been moved before, preserve its original path.
+      let header_old =
+         tag['move'] && tag['move'].header_old
+            ? tag['move'].header_old
+            : trailingPath;
+
+      tag['move'] = {
+         header_old,
+         header_new: to,
+      };
+
       curSpot[item] = nestedItems[item];
       delete nestedItems[item];
 
       this.props.updateData(data);
+      console.log(data);
       this.props.popPopup();
    };
 
@@ -121,14 +145,15 @@ class ItemMover extends Component {
                      <Subtitle>{'Select the directory to move it to'}</Subtitle>
                   </div>
                </Header>
-               <Explorer
-                  id={2}
-                  data={this.props.data}
-                  height="80%"
-                  width="auto"
-                  nonLeafOnly
-                  onChange={this.handleMove}
-               />
+               <ExplorerContainer>
+                  <Explorer
+                     id={2}
+                     data={this.props.data}
+                     hideOptions
+                     nonLeafOnly
+                     onChange={this.handleMove}
+                  />
+               </ExplorerContainer>
             </Modal>
          </Container>
       );
