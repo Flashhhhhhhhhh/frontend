@@ -173,6 +173,7 @@ class DownloadManager extends Component {
                   <TextInput
                      value={text}
                      onChange={this.updateText}
+                     autoFocus
                      placeholder="File name"
                   />
                </InputContainer>

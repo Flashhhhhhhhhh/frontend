@@ -9,6 +9,7 @@ import Files from './files';
 import UploadButton from './upload_button';
 import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
+// import data from '../classifier/data.json';
 
 const apiUrl = 'http://ec2-54-86-77-144.compute-1.amazonaws.com:5004/upload';
 
@@ -105,7 +106,6 @@ class MainView extends Component {
    };
 
    handleDrop = file => {
-      console.log(file);
       this.setState(state => {
          state.fileStack.push(file[0]);
          return state;
@@ -154,7 +154,7 @@ class MainView extends Component {
 
    componentDidMount() {
       // Use this to view data without uploading anything (debugging)
-      //this.viewData(data);
+      // this.viewData(data);
    }
 
    render() {

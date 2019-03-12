@@ -106,7 +106,12 @@ const RecursiveExplorer = ({
 
    return (
       <React.Fragment>
-         <Column index={trailingPath.length}  key={data} showPlus tag={data.tag}>
+         <Column
+            path={trailingPath}
+            index={trailingPath.length}
+            key={data}
+            showPlus
+            tag={data.tag}>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
                return (

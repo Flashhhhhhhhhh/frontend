@@ -71,7 +71,7 @@ const LogicLogo = styled.img`
    }
 `;
 
-export default class WelcomScreen extends Component {
+export default class WelcomeScreen extends Component {
    state = {
       isOpen: true,
       isClosing: false,
@@ -91,7 +91,7 @@ export default class WelcomScreen extends Component {
          this.setState({
             showExtension: true,
          });
-      }, 800);
+      }, 600);
       setTimeout(() => {
          this.setState({ isClosing: true });
       }, 1700);

@@ -127,7 +127,6 @@ class ItemMover extends Component {
       delete nestedItems[item];
 
       this.props.updateData(data);
-      console.log(data);
       this.props.popPopup();
    };
 
