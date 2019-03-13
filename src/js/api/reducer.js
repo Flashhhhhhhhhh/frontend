@@ -1,6 +1,10 @@
 const initialState = {
    data: {},
    refreshCount: 0,
+   user: {
+      isAdmin: false,
+      username: null
+   }
 };
 
 const apiReducer = (state = initialState, action) => {
@@ -11,6 +15,11 @@ const apiReducer = (state = initialState, action) => {
             data: action.data,
             refreshCount: state.refreshCount + 1,
          };
+      case 'UPDATE_USER':
+         return {
+            ...state,
+            user: action.user,
+         }
       default:
          return state;
    }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { popView } from '../../views/actions';
 import * as views from '../../views';
+import UserSelect from './user_select';
 
 const Container = styled.div`
    z-index: 1;
@@ -178,6 +179,7 @@ class Header extends Component {
                   !(goingBack && viewStack.length === 2) && viewStack.length > 1
                }
             />
+            <UserSelect />
          </Container>
       );
    }
