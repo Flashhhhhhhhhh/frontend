@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import * as PopupActions from '../../popups/actions';
 import * as ApiActions from '../../api/actions';
 
@@ -51,19 +51,10 @@ const Avatar = styled.img``;
 
 class UserSelect extends Component {
    selectUser = () => {
-      const { apiState } = this.props;
-      let { user } = apiState;
-
-      if (user.username) {
-         user.username = null
-         this.props.updateUser(user);
-         window.location.reload();
-      } else {
-         this.props.pushPopup({
-            name: 'UserSelector',
-            props: {}
-         })
-      }
+      this.props.pushPopup({
+         name: 'UserSelector',
+         props: {}
+      })
    }
 
    render() {

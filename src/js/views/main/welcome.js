@@ -39,7 +39,7 @@ const Text = styled.h3`
    margin: 0 auto;
    color: #2c4358;
    font-size: 23px;
-   font-weight: 500;
+   font-weight: 300;
 `;
 
 const Welcome = ({ isReady, uploading }) => {

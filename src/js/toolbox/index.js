@@ -4,5 +4,7 @@ export { default as Icon } from './components/icon';
 export { default as Explorer } from './components/explorer';
 export { default as Spinner } from './components/spinner';
 export { default as OptionsButton } from './components/options_button';
+export { default as Radio } from './components/radio';
+export { default as RadioGroup } from './components/radio_group';
 
 export { default as constants } from './constants';

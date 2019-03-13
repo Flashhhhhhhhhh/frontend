@@ -3,7 +3,7 @@ const initialState = {
    refreshCount: 0,
    user: {
       isAdmin: false,
-      username: null
+      username: 'admin'
    }
 };
 

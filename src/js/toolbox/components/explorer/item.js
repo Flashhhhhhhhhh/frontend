@@ -9,6 +9,10 @@ const Container = styled.div`
       display: none;
    }
 
+   .lock-icon {
+      margin-left: 4px;
+   }
+
    :hover {
       .options-button {
          display: block;

@@ -6,6 +6,8 @@ import DirAdder from './dir_adder';
 import ItemMover from './item_mover';
 import DownloadManager from './download_manager';
 import UserSelector from './user_selector';
+import DirDeleter from './dir_deleter';
+import PermissionsSelector from './permissions_selector';
 
 const popups = {
    Options: <OptionsMenu />,
@@ -13,6 +15,8 @@ const popups = {
    ItemMover: <ItemMover />,
    DownloadManager: <DownloadManager />,
    UserSelector: <UserSelector />,
+   DirDeleter: <DirDeleter />,
+   PermissionsSelector: <PermissionsSelector />,
 }
 
 const Container = styled.div``;
