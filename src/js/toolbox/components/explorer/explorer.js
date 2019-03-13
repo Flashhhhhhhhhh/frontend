@@ -40,12 +40,17 @@ class Explorer extends Component {
    }
 }
 
+const mapStateToProps = state => ({
+   apiState: state.apiState,
+});
+
 const mapDispatchToProps = dispatch => ({
    pushPopup: popup => dispatch(Actions.pushPopup(popup)),
 });
 
 const RecursiveExplorer = ({
    data,
+   apiState,
    fullData,
    leadingPath,
    trailingPath,
@@ -62,10 +67,11 @@ const RecursiveExplorer = ({
    }
 
    const setupOptionsMenu = (e, name) => {
+      const { user } = apiState;
+
       pushPopup({
          name: 'Options',
          props: {
-            mousePos: { x: e.screenX, y: e.screenY },
             options: [
                {
                   label: 'Move',
@@ -85,13 +91,37 @@ const RecursiveExplorer = ({
                   label: 'Rename',
                   icon: 'edit',
                },
-               {
-                  label: 'Lock',
-                  icon: 'lock',
-               },
+               ...(user.username === 'admin'
+                  ? [
+                       {
+                          label: 'Change Permissions',
+                          icon: 'lock',
+                          onClick: () =>
+                             pushPopup({
+                                name: 'PermissionsSelector',
+                                props: {
+                                   data: fullData,
+                                   leadingPath,
+                                   trailingPath,
+                                   item: name,
+                                },
+                             }),
+                       },
+                    ]
+                  : []),
                {
                   label: 'Delete',
                   icon: 'trash',
+                  onClick: () =>
+                     pushPopup({
+                        name: 'DirDeleter',
+                        props: {
+                           data: fullData,
+                           leadingPath,
+                           trailingPath,
+                           item: name,
+                        },
+                     }),
                },
             ],
          },
@@ -114,13 +144,29 @@ const RecursiveExplorer = ({
             tag={data.tag}>
             {Object.keys(data).map(name => {
                const isSelected = name === leadingPath[0];
+               const isLocked =
+                  data[name].tag && data[name].tag[0]['sensitive'];
+               const isAdmin = apiState.user.username === 'admin';
+
                return (
                   name === 'tag' || (
                      <Item
                         key={name}
                         isSelected={isSelected}
-                        onClick={() => onChange(trailingPath.concat(name))}>
+                        onClick={() =>
+                           (isAdmin || !isLocked) &&
+                           onChange(trailingPath.concat(name))
+                        }>
                         <Truncate>{prettify(name)}</Truncate>
+                        {isLocked && (
+                           <Icon
+                              className="lock-icon"
+                              name="lock"
+                              size={20}
+                              color={isSelected ? 'white' : color.gray[5]}
+                              onClick={null}
+                           />
+                        )}
                         <Spacer />
                         {hideOptions || (
                            <Icon
@@ -131,7 +177,8 @@ const RecursiveExplorer = ({
                               onClick={e => setupOptionsMenu(e, name)}
                            />
                         )}
-                        {Array.isArray(data[name]) ? null : (
+                        {(!isAdmin && isLocked) ||
+                        Array.isArray(data[name]) ? null : (
                            <Icon
                               name="chevron-right"
                               size={20}
@@ -157,10 +204,9 @@ const RecursiveExplorer = ({
    );
 };
 
-const ConnectedRecursiveExplorer = connect(
-   null,
-   mapDispatchToProps,
-)(RecursiveExplorer);
+const ConnectedRecursiveExplorer = connect(mapStateToProps, mapDispatchToProps)(
+   RecursiveExplorer,
+);
 
 RecursiveExplorer.defaultProps = {
    trailingPath: [],

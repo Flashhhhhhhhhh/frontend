@@ -1,0 +1,91 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+
+import Radio from '../radio';
+import constants from '../../constants';
+
+const { color, fontSize, spacing } = constants;
+
+const FieldSet = styled.fieldset`
+	margin: 0;
+   padding: 0;
+   font-size: ${fontSize[2]};
+   color: ${color.grayAlpha[9]};
+   border: none;
+`;
+
+const Legend = styled.legend`
+   padding: 0;
+   margin-bottom: ${spacing[3]};
+`;
+
+const RadioContainer = styled(Radio)`
+   :not(:last-of-type) {
+      margin-bottom: ${spacing[1]};
+   }
+`;
+
+const RadioGroup = ({
+   className,
+   label,
+   value,
+   disabled,
+   onMouseEnter,
+   onMouseLeave,
+   onChange,
+   radios,
+}) => (
+   <FieldSet
+      className={className}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}>
+      {label !== '' && <Legend>{label}</Legend>}
+      {radios.map(({ ...radio }) => (
+         <RadioContainer
+            key={radio.value}
+            checked={radio.value === value}
+            disabled={disabled}
+            onChange={onChange}
+            {...radio}
+         />
+      ))}
+   </FieldSet>
+);
+
+RadioGroup.propTypes = {
+   /** Array of radios. */
+   radios: PropTypes.arrayOf(
+      PropTypes.shape({
+         label: PropTypes.string,
+         value: PropTypes.string,
+         disabled: PropTypes.bool,
+      }),
+   ).isRequired,
+   /** Set class name of containing element. */
+   className: PropTypes.string,
+   /** Indicates that the form control is not available for interaction. */
+   disabled: PropTypes.bool,
+   /** Title of radio group. */
+   label: PropTypes.string,
+   /** Corresponds to the value of the selected radio. */
+   value: PropTypes.string,
+   /** Callback when any radio is toggled. */
+   onChange: PropTypes.func,
+   /** Callback when mouse enters component. */
+   onMouseEnter: PropTypes.func,
+   /** Callback when mouse leaves component. */
+   onMouseLeave: PropTypes.func,
+};
+
+RadioGroup.defaultProps = {
+   className: '',
+   disabled: false,
+   label: '',
+   value: '',
+   onChange: () => {},
+   onMouseEnter: () => {},
+   onMouseLeave: () => {},
+};
+
+export default RadioGroup;

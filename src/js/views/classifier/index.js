@@ -35,6 +35,7 @@ const Text = styled.h3`
 const ExplorerContainer = styled.div`
    margin: 1em;
    height: 60vh;
+   min-height: 34em;
    width: 80%;
    max-width: 70em;
    transition: all 0.3s ease;
