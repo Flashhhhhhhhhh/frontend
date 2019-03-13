@@ -141,7 +141,7 @@ class ItemMover extends Component {
                   <Emoji>🗄</Emoji>
                   <div>
                      <Title>Move "{item}"</Title>
-                     <Subtitle>{'Select the directory to move it to'}</Subtitle>
+                     <Subtitle>{'Select where to move it'}</Subtitle>
                   </div>
                </Header>
                <ExplorerContainer>

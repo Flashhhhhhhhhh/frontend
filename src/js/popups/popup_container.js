@@ -5,12 +5,14 @@ import OptionsMenu from './options';
 import DirAdder from './dir_adder';
 import ItemMover from './item_mover';
 import DownloadManager from './download_manager';
+import UserSelector from './user_selector';
 
 const popups = {
    Options: <OptionsMenu />,
    DirAdder: <DirAdder />,
    ItemMover: <ItemMover />,
    DownloadManager: <DownloadManager />,
+   UserSelector: <UserSelector />,
 }
 
 const Container = styled.div``;
