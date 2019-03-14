@@ -112,7 +112,7 @@ class ClassifierView extends Component {
                      slidingUp: false,
                   });
                }, 300);
-            }, 500);
+            }, 2000);
          }, 300);
       }, 500);
    };

@@ -61,7 +61,7 @@ const RecursiveExplorer = ({
    if (Array.isArray(data)) {
       return (
          <Column index={10}>
-            <Preview data={data} />
+            <Preview path={trailingPath} data={data} />
          </Column>
       );
    }
@@ -90,6 +90,16 @@ const RecursiveExplorer = ({
                {
                   label: 'Rename',
                   icon: 'edit',
+                  onClick: () =>
+                     pushPopup({
+                        name: 'Renamer',
+                        props: {
+                           data: fullData,
+                           leadingPath,
+                           trailingPath,
+                           item: name,
+                        },
+                     }),
                },
                ...(user.username === 'admin'
                   ? [
@@ -142,7 +152,7 @@ const RecursiveExplorer = ({
             key={data}
             showPlus
             tag={data.tag}>
-            {Object.keys(data).map(name => {
+            {Object.keys(data).sort().map(name => {
                const isSelected = name === leadingPath[0];
                const isLocked =
                   data[name].tag && data[name].tag[0]['sensitive'];
