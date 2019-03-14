@@ -8,6 +8,7 @@ import DownloadManager from './download_manager';
 import UserSelector from './user_selector';
 import DirDeleter from './dir_deleter';
 import PermissionsSelector from './permissions_selector';
+import Renamer from './renamer';
 
 const popups = {
    Options: <OptionsMenu />,
@@ -17,6 +18,7 @@ const popups = {
    UserSelector: <UserSelector />,
    DirDeleter: <DirDeleter />,
    PermissionsSelector: <PermissionsSelector />,
+   Renamer: <Renamer />,
 }
 
 const Container = styled.div``;
