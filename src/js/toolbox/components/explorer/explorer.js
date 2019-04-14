@@ -18,7 +18,7 @@ const Container = styled.div`
 
 class Explorer extends Component {
    render() {
-      const { id, data, path, onChange, hideOptions } = this.props;
+      const { id, data, path, onChange, hiddenItem, hideOptions } = this.props;
 
       return (
          <Container
@@ -31,6 +31,7 @@ class Explorer extends Component {
                key={data}
                data={data}
                fullData={data}
+               hiddenItem={hiddenItem}
                hideOptions={hideOptions}
                leadingPath={path}
                onChange={onChange}
@@ -54,6 +55,7 @@ const RecursiveExplorer = ({
    fullData,
    leadingPath,
    trailingPath,
+   hiddenItem,
    hideOptions,
    onChange,
    pushPopup,
@@ -83,6 +85,7 @@ const RecursiveExplorer = ({
                            data: fullData,
                            leadingPath,
                            trailingPath,
+                           hiddenItem: name,
                            item: name,
                         },
                      }),
@@ -159,7 +162,7 @@ const RecursiveExplorer = ({
                const isAdmin = apiState.user.username === 'admin';
 
                return (
-                  name === 'tag' || (
+                  name === 'tag' || name === hiddenItem || (
                      <Item
                         key={name}
                         isSelected={isSelected}
@@ -206,6 +209,7 @@ const RecursiveExplorer = ({
                data={data[leadingPath[0]]}
                leadingPath={leadingPath.slice(1)}
                trailingPath={trailingPath.concat(leadingPath.slice(0, 1))}
+               hiddenItem={hiddenItem}
                hideOptions={hideOptions}
                onChange={onChange}
             />
