@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import styled from "styled-components";
-import Fuse from "fuse.js";
-import Explorer from "./explorer";
-import Search from "./search";
-import { Button } from "../../";
-import constants from "../../constants";
-import { minBy } from "lodash";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import Fuse from 'fuse.js';
+import Explorer from './explorer';
+import Search from './search';
+import { Button } from '../../';
+import constants from '../../constants';
+import { minBy } from 'lodash';
 
 const { color } = constants;
 
@@ -37,7 +37,7 @@ class ExplorerComponent extends Component {
       super(props);
       this.state = {
          path: [],
-         canSelect: false
+         canSelect: false,
       };
    }
 
@@ -45,7 +45,7 @@ class ExplorerComponent extends Component {
       const item = {
          itemName,
          path,
-         pathText: path.join(" ")
+         pathText: path.join(' '),
       };
 
       if (!tree) {
@@ -62,7 +62,7 @@ class ExplorerComponent extends Component {
 
       // Recursively create a list of items for each child.
       const childItems = Object.keys(tree).map(itemName => {
-         const childTree = itemName === "tag" ? false : tree[itemName];
+         const childTree = itemName === 'tag' ? false : tree[itemName];
          const childPath = [...path, itemName];
          return this.createItemList(childTree, itemName, childPath);
       });
@@ -77,26 +77,26 @@ class ExplorerComponent extends Component {
       const fuse = new Fuse(this.itemList, {
          keys: [
             {
-               name: "itemName",
-               weight: 0.3
+               name: 'itemName',
+               weight: 0.3,
             },
             {
-               name: "pathText",
-               weight: 0.7
-            }
+               name: 'pathText',
+               weight: 0.7,
+            },
          ],
          includeScore: true,
-         threshold: 0.4
+         threshold: 0.4,
       });
       const bestResult = minBy(
          fuse.search(str.trim()),
          result =>
             // Prefer more general categories (which have a smaller path length).
-            result.score * (1 + 0.1 * result.item.path.length)
+            result.score * (1 + 0.1 * result.item.path.length),
       );
 
       return {
-         path: bestResult ? bestResult.item.path : []
+         path: bestResult ? bestResult.item.path : [],
       };
    };
 
@@ -104,7 +104,7 @@ class ExplorerComponent extends Component {
       const { id } = this.props;
       this.setState({
          path,
-         leafSelected: this.checkForLeaf(path)
+         leafSelected: this.checkForLeaf(path),
       });
 
       const el = document.getElementById(`explorer-${id}`);
@@ -112,7 +112,7 @@ class ExplorerComponent extends Component {
          el.scroll({
             top: 0,
             left: el.scrollWidth,
-            behavior: "smooth"
+            behavior: 'smooth',
          });
       }, 100);
    };
@@ -138,7 +138,14 @@ class ExplorerComponent extends Component {
    };
 
    render() {
-      const { id, width, height, hideOptions, nonLeafOnly } = this.props;
+      const {
+         id,
+         width,
+         height,
+         hiddenItem,
+         hideOptions,
+         nonLeafOnly,
+      } = this.props;
       const { leafSelected, path } = this.state;
       const curItem = path[path.length - 1];
 
@@ -149,15 +156,17 @@ class ExplorerComponent extends Component {
                id={`explorer-${id}`}
                data={this.props.data}
                path={this.state.path}
+               hiddenItem={hiddenItem}
                hideOptions={hideOptions}
                onChange={this.updatePath}
             />
             <ActionButtonContainer>
                <Button
-               disabled={nonLeafOnly ? !curItem || leafSelected : !leafSelected}
+                  disabled={
+                     nonLeafOnly ? !curItem || leafSelected : !leafSelected
+                  }
                   onClick={() => this.props.onChange(path)}
-                  design="primary"
-               >
+                  design="primary">
                   Select
                </Button>
             </ActionButtonContainer>
@@ -168,7 +177,7 @@ class ExplorerComponent extends Component {
 
 ExplorerComponent.defaultProps = {
    nonLeafOnly: false,
-   onChange: () => {}
-}
+   onChange: () => {},
+};
 
 export default ExplorerComponent;

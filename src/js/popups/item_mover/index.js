@@ -95,7 +95,6 @@ class ItemMover extends Component {
    };
 
    handleMove = to => {
-      console.log('Moving to ', to);
       let { data, trailingPath, item } = this.props;
 
       // We need to also move everything nested under the current item.
@@ -150,6 +149,7 @@ class ItemMover extends Component {
                      data={this.props.data}
                      hideOptions
                      nonLeafOnly
+                     hiddenItem={item}
                      onChange={this.handleMove}
                   />
                </ExplorerContainer>
