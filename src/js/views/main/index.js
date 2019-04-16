@@ -11,7 +11,7 @@ import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
 // import data from '../classifier/data.json';
 
-const apiUrl = 'http://ec2-52-87-177-238.compute-1.amazonaws.com:5000/upload';
+const apiUrl = 'http://ec2-52-87-177-238.compute-1.amazonaws.com:5002/upload';
 
 const Container = styled.div`
    display: flex;
@@ -129,7 +129,11 @@ class MainView extends Component {
          const { fileStack } = this.state;
          const req = request.post(apiUrl);
          fileStack.forEach(file => {
-            req.attach('data_file', file);
+            if (file.type === 'application/json') {
+               req.attach('data_ontology', file);
+            } else {
+               req.attach('data_file', file);
+            }
          });
 
          req.then(response => {
