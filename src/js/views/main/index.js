@@ -119,14 +119,25 @@ class MainView extends Component {
       });
    };
 
+   validateFiles(files) {
+      return files.filter(file => file.type === 'text/csv').length > 0;
+   }
+
    sendFiles = () => {
+      const { fileStack } = this.state;
+      if (!this.validateFiles(fileStack)) {
+         alert("There's no CSV added!");
+         return;
+      }
+
       this.setState({
          error: false,
          uploading: true,
          showLoader: true,
       });
+
+
       setTimeout(() => {
-         const { fileStack } = this.state;
          const req = request.post(apiUrl);
          fileStack.forEach(file => {
             if (file.type === 'application/json') {
