@@ -39,7 +39,7 @@ const Button = styled.button`
    ${props =>
       props.isSelected &&
       css`
-         color: white;
+         color: gray;
          background: ${color.blue[4]};
       `}
 
