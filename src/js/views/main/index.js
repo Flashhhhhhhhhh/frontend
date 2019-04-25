@@ -9,9 +9,11 @@ import Files from './files';
 import UploadButton from './upload_button';
 import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
-// import data from '../classifier/data.json';
 
-const apiUrl = 'http://ec2-52-87-177-238.compute-1.amazonaws.com:5000/upload';
+const searchParams = new URLSearchParams(window.location.search);
+const port = searchParams.has("dev") ? 5006 : 5000;
+
+const apiUrl = `http://ec2-52-87-177-238.compute-1.amazonaws.com:${port}/upload`;
 
 const Container = styled.div`
    display: flex;
