@@ -11,7 +11,7 @@ import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
 // import data from '../classifier/data.json';
 
-const apiUrl = 'http://ec2-52-87-177-238.compute-1.amazonaws.com:5002/upload';
+const apiUrl = 'http://ec2-52-87-177-238.compute-1.amazonaws.com:5000/upload';
 
 const Container = styled.div`
    display: flex;
