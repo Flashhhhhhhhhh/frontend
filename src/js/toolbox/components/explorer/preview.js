@@ -69,7 +69,7 @@ class Preview extends Component {
             <TextContainer>
                <Title>{category}</Title>
                <Subtitle>Value: <b>{value}</b></Subtitle>
-               <Subtitle><em>From healthcare.csv</em></Subtitle>
+               <Subtitle><em>From {data[0].source}</em></Subtitle>
             </TextContainer>
             {data.map(
                item =>
