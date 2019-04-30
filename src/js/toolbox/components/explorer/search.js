@@ -5,7 +5,7 @@ import { Icon } from "../../";
 const Container = styled.div`
    display: flex;
    align-items: center;
-   height: 4em;
+   min-height: 50px;
    box-sizing: border-box;
 `;
 
