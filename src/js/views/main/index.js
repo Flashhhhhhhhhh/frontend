@@ -11,7 +11,9 @@ import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
 
 const searchParams = new URLSearchParams(window.location.search);
-const port = searchParams.has("dev") ? 5006 : 5000;
+const port = searchParams.has('port')
+   ? parseInt(searchParams.get('port'))
+   : 5000;
 
 const apiUrl = `http://ec2-52-87-177-238.compute-1.amazonaws.com:${port}/upload`;
 
@@ -138,7 +140,6 @@ class MainView extends Component {
          showLoader: true,
       });
 
-
       setTimeout(() => {
          const req = request.post(apiUrl);
          fileStack.forEach(file => {
@@ -149,23 +150,25 @@ class MainView extends Component {
             }
          });
 
-         req.then(response => {
-            this.setState({
-               done: true,
-            });
-            setTimeout(() => {
-               this.viewData(response.body);
+         req
+            .then(response => {
+               this.setState({
+                  done: true,
+               });
                setTimeout(() => {
-                  this.setState({
-                     done: false,
-                     uploading: false,
-                     showLoader: false,
-                  });
+                  this.viewData(response.body);
+                  setTimeout(() => {
+                     this.setState({
+                        done: false,
+                        uploading: false,
+                        showLoader: false,
+                     });
+                  }, 300);
                }, 300);
-            }, 300);
-         }).catch(error => {
-            this.setState({ error });
-         });
+            })
+            .catch(error => {
+               this.setState({ error });
+            });
       }, 1000);
    };
 
@@ -225,7 +228,4 @@ class MainView extends Component {
    }
 }
 
-export default connect(
-   null,
-   mapDispatchToProps,
-)(MainView);
+export default connect(null, mapDispatchToProps)(MainView);
