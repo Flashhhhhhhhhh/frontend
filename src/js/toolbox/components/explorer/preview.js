@@ -73,7 +73,7 @@ class Preview extends Component {
             </TextContainer>
             {data.map(
                item =>
-                  item && <Text key={item.value}>{item && item.value}</Text>,
+                  item && <Text key={item}>{item && item.value}</Text>,
             )}
          </Container>
       );

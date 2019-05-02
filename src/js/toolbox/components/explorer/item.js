@@ -25,7 +25,7 @@ const Button = styled.button`
    height: 40px;
    display: flex;
    align-items: center;
-   padding: 0 4px 0 8px;
+   padding: 0 12px 0 8px;
    font-family: inherit;
    font-size: 14px;
    text-align: left;
@@ -33,6 +33,7 @@ const Button = styled.button`
    border-bottom: 1px solid ${color.gray[2]};
    box-sizing: border-box;
    outline: 0;
+   background: white;
    -webkit-appearance: none;
    cursor: pointer;
 

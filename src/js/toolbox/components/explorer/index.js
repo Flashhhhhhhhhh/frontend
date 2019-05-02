@@ -62,7 +62,10 @@ class ExplorerComponent extends Component {
 
       // Recursively create a list of items for each child.
       const childItems = Object.keys(tree).map(itemName => {
-         const childTree = itemName === 'tag' ? false : tree[itemName];
+         const childTree =
+            itemName === 'tag' || Array.isArray(tree[itemName])
+               ? false
+               : tree[itemName];
          const childPath = [...path, itemName];
          return this.createItemList(childTree, itemName, childPath);
       });
