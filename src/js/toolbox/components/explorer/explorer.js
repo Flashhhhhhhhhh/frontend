@@ -25,6 +25,7 @@ class Explorer extends Component {
             id={id}
             style={{
                display: 'flex',
+               flex: 1,
                overflowX: 'auto',
             }}>
             <ConnectedRecursiveExplorer

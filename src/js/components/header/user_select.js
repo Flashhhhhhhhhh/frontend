@@ -59,7 +59,6 @@ class UserSelect extends Component {
 
    render() {
       const { apiState } = this.props;
-      console.log(apiState);
       const { user } = apiState;
       const { username } = user;
 
