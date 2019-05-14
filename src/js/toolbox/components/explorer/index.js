@@ -163,19 +163,24 @@ class ExplorerComponent extends Component {
                hideOptions={hideOptions}
                onChange={this.updatePath}
             />
+{/*
             <ActionButtonContainer>
-               <Button
-                  disabled={
-                     nonLeafOnly ? !curItem || leafSelected : !leafSelected
-                  }
-                  onClick={() => this.props.onChange(path)}
-                  design="primary">
-                  Select
-               </Button>
+            <Button
+            disabled={
+               nonLeafOnly ? !curItem || leafSelected : !leafSelected
+            }
+            onClick={() => this.props.onChange(path)}
+            design="primary">
+            Select
+            </Button>
             </ActionButtonContainer>
          </Container>
       );
    }
+*/}
+   </Container>
+      );
+}
 }
 
 ExplorerComponent.defaultProps = {
