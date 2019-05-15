@@ -151,6 +151,7 @@ class ItemMover extends Component {
                      nonLeafOnly
                      hiddenItem={item}
                      onChange={this.handleMove}
+                     showSelectButton
                   />
                </ExplorerContainer>
             </Modal>
