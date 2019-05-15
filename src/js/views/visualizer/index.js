@@ -18,7 +18,7 @@ const TextContainer = styled.div`
    width: 80%;
    max-width: 70em;
    transition: all 0.3s;
-   opacity: ${props => props.isHidden ? 0 : 1};
+   opacity: ${props => (props.isHidden ? 0 : 1)};
 `;
 
 const Title = styled.h3`
@@ -72,8 +72,8 @@ class VisualizerView extends Component {
       this.props.pushPopup({
          name: 'DownloadManager',
          props: { data },
-      })
-   }
+      });
+   };
 
    render() {
       const { apiState } = this.props;
@@ -83,28 +83,23 @@ class VisualizerView extends Component {
          <Container>
             <TextContainer>
                <Title>{'Explore'}</Title>
-               <Text>
-                  {
-                     "Here's your finalized data!"
-                  }
-               </Text>
+               <Text>{"Here's your finalized data!"}</Text>
             </TextContainer>
             <ExplorerContainer>
                <Explorer
                   key={`visualizer-${refreshCount}`}
                   id={1}
                   data={data}
+                  actionButtons={
+                     <Button design="primary" onClick={this.downloadJson}>
+                        {'Export...'}
+                     </Button>
+                  }
                />
             </ExplorerContainer>
-            <ButtonContainer>
-               <Button design="primary" onClick={this.downloadJson}>{"Export..."}</Button>
-            </ButtonContainer>
          </Container>
       );
    }
 }
 
-export default connect(
-   mapStateToProps,
-   mapDispatchToProps,
-)(VisualizerView);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizerView);

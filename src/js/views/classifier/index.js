@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
 import * as Actions from '../actions';
-import { Explorer, Spinner, Button } from '../../toolbox';
+import { Explorer, Spinner, Button, constants } from '../../toolbox';
+
+const { animation } = constants;
 
 const Container = styled.div`
    display: flex;
@@ -44,25 +46,62 @@ const ExplorerContainer = styled.div`
       props.scalingDown &&
       css`
          transform: scale(0.4);
-      `}
-
-   ${props =>
+      `} ${props =>
       props.slidingUp &&
       css`
          transform: scale(0.4) translateY(-100%);
          opacity: 0;
-      `}
+      `};
 `;
 
 const LoadingContainer = styled.div`
    position: absolute;
    top: 0;
-   bottom: 0;
+   bottom: 20%;
    left: 0;
    right: 0;
    margin: auto;
-   height: 4em;
-   width: 4em;
+   height: 20em;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+
+   .word-container {
+      display: flex;
+      align-items: center;
+      animation: ${animation.fadeIn} 0.5s;
+   }
+`;
+
+const LoadingSubtext = styled.h3`
+   margin: 0 auto 16px auto;
+   color: #2c4358;
+   font-size: 23px;
+   font-weight: 300;
+`;
+
+const LoadingText = styled.h2`
+   font-weight: 300;
+   font-size: 42px;
+   color: rgb(70, 70, 70);
+   margin: 0;
+   animation: slideUp 0.5s;
+`;
+
+const Emoji = styled.h2`
+   width: 60px;
+   height: 60px;
+   font-size: 50px;
+   margin: 0 24px;
+   animation: jiggle 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+   @keyframes jiggle {
+      0% {
+         transform: rotate(-30deg) scale(0.5);
+         opacity: 0;
+      }
+   }
 `;
 
 const ButtonContainer = styled.div``;
@@ -137,27 +176,32 @@ class ClassifierView extends Component {
                   key={`visualizer-${refreshCount}`}
                   id={1}
                   data={data}
+                  actionButtons={
+                     <Button
+                        disabled={uploading}
+                        onClick={this.uploadData}
+                        design="primary">
+                        {uploading ? 'Uploading...' : 'Upload Finalized Data'}
+                     </Button>
+                  }
                />
             </ExplorerContainer>
             {uploading && (
                <LoadingContainer>
+                  <div className="word-container">
+                     <Emoji>💾</Emoji>
+                     <div>
+                        <LoadingText>Uploading...</LoadingText>
+                        <LoadingSubtext>
+                           {"We're applying your changes"}
+                        </LoadingSubtext>
+                     </div>
+                  </div>
                   <Spinner />
                </LoadingContainer>
             )}
-            <ButtonContainer>
-               <Button
-                  disabled={uploading}
-                  onClick={this.uploadData}
-                  design="primary">
-                  {uploading ? 'Uploading...' : 'Upload Finalized Data'}
-               </Button>
-            </ButtonContainer>
          </Container>
       );
    }
 }
-
-export default connect(
-   mapStateToProps,
-   mapDispatchToProps,
-)(ClassifierView);
+export default connect(mapStateToProps, mapDispatchToProps)(ClassifierView);
