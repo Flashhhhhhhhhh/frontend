@@ -42,8 +42,6 @@ const ExplorerContainer = styled.div`
    transition: all 0.3s ease;
 `;
 
-const ButtonContainer = styled.div``;
-
 const mapStateToProps = state => {
    return {
       viewState: state.viewState,

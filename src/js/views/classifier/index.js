@@ -104,8 +104,6 @@ const Emoji = styled.h2`
    }
 `;
 
-const ButtonContainer = styled.div``;
-
 const mapStateToProps = state => {
    return {
       viewState: state.viewState,
@@ -189,7 +187,7 @@ class ClassifierView extends Component {
             {uploading && (
                <LoadingContainer>
                   <div className="word-container">
-                     <Emoji>💾</Emoji>
+                     <Emoji><span role="img" aria-label="save">💾</span></Emoji>
                      <div>
                         <LoadingText>Uploading...</LoadingText>
                         <LoadingSubtext>

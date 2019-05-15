@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Fuse from 'fuse.js';
 import Explorer from './explorer';
 import Search from './search';
-import { Button } from '../../';
 import constants from '../../constants';
 import { minBy } from 'lodash';
 
@@ -147,11 +146,8 @@ class ExplorerComponent extends Component {
          height,
          hiddenItem,
          hideOptions,
-         nonLeafOnly,
          actionButtons,
       } = this.props;
-      const { leafSelected, path } = this.state;
-      const curItem = path[path.length - 1];
 
       return (
          <Container width={width} height={height}>
@@ -173,7 +169,6 @@ class ExplorerComponent extends Component {
 }
 
 ExplorerComponent.defaultProps = {
-   nonLeafOnly: false,
    onChange: () => {},
 };
 
