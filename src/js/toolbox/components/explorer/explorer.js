@@ -154,7 +154,7 @@ const RecursiveExplorer = ({
             path={trailingPath}
             index={trailingPath.length}
             key={data}
-            showPlus
+            showPlus={!hideOptions}
             tag={data.tag}>
             {Object.keys(data).sort().map(name => {
                const isSelected = name === leadingPath[0];

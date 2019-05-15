@@ -88,6 +88,7 @@ class VisualizerView extends Component {
                   key={`visualizer-${refreshCount}`}
                   id={1}
                   data={data}
+                  hideOptions
                   actionButtons={
                      <Button design="primary" onClick={this.downloadJson}>
                         {'Export...'}
