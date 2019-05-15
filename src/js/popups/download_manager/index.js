@@ -151,6 +151,7 @@ class DownloadManager extends Component {
    };
 
    downloadCsv = () => {
+      alert("Oh no, the Beta gods informed us that this isn't ready yet!");
       this.props.popPopup();
    };
 
@@ -181,7 +182,7 @@ class DownloadManager extends Component {
                   <Button
                      design="primary"
                      disabled={text.length === 0}
-                     onClick={this.downloadJson}>
+                     onClick={this.downloadCsv}>
                      Download CSV
                   </Button>
                   <Button
