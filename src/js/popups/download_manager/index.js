@@ -151,7 +151,7 @@ class DownloadManager extends Component {
    };
 
    downloadCsv = () => {
-      alert("Sorry, this is currently unavailable. We are still implementing this function.");
+      alert("Oh no, the Beta gods informed us that this isn't ready yet!");
       this.props.popPopup();
    };
 

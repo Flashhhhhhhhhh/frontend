@@ -27,7 +27,7 @@ const Container = styled.div`
 const ActionButtonContainer = styled.div`
    display: flex;
    justify-content: flex-end;
-   height: 3em;
+   height: 42px;
    padding: 12px 0 4px 0;
    border-top: 1px solid ${color.gray[3]};
 `;
@@ -148,6 +148,7 @@ class ExplorerComponent extends Component {
          hiddenItem,
          hideOptions,
          nonLeafOnly,
+         actionButtons,
       } = this.props;
       const { leafSelected, path } = this.state;
       const curItem = path[path.length - 1];
@@ -163,24 +164,12 @@ class ExplorerComponent extends Component {
                hideOptions={hideOptions}
                onChange={this.updatePath}
             />
-{/*
-            <ActionButtonContainer>
-            <Button
-            disabled={
-               nonLeafOnly ? !curItem || leafSelected : !leafSelected
-            }
-            onClick={() => this.props.onChange(path)}
-            design="primary">
-            Select
-            </Button>
-            </ActionButtonContainer>
+            {actionButtons && (
+               <ActionButtonContainer>{actionButtons}</ActionButtonContainer>
+            )}
          </Container>
       );
    }
-*/}
-   </Container>
-      );
-}
 }
 
 ExplorerComponent.defaultProps = {
