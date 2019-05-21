@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import request from 'superagent';
 import { pushView } from '../actions';
 import Dropzone from 'react-dropzone';
 import Welcome from './welcome';
@@ -9,13 +8,9 @@ import Files from './files';
 import UploadButton from './upload_button';
 import * as ApiActions from '../../api/actions';
 import { Button } from '../../toolbox';
+import FileUploader from './file_uploader';
 
-const searchParams = new URLSearchParams(window.location.search);
-const port = searchParams.has('port')
-   ? parseInt(searchParams.get('port'))
-   : 5000;
-
-const apiUrl = `http://ec2-52-87-177-238.compute-1.amazonaws.com:${port}/upload`;
+const fileUploader = new FileUploader();
 
 const Container = styled.div`
    display: flex;
@@ -123,14 +118,11 @@ class MainView extends Component {
       });
    };
 
-   validateFiles(files) {
-      return files.filter(file => file.type === 'text/csv').length > 0;
-   }
-
    sendFiles = () => {
       const { fileStack } = this.state;
-      if (!this.validateFiles(fileStack)) {
-         alert("There's no CSV added!");
+
+      if (!fileUploader.validateFiles(fileStack)) {
+         alert("Error: Please add at least one CSV File");
          return;
       }
 
@@ -140,36 +132,22 @@ class MainView extends Component {
          showLoader: true,
       });
 
-      setTimeout(() => {
-         const req = request.post(apiUrl);
-         fileStack.forEach(file => {
-            if (file.type === 'application/json') {
-               req.attach('data_ontology', file);
-            } else {
-               req.attach('data_file', file);
-            }
+      fileUploader.sendFiles(fileStack).then(response => {
+         this.setState({
+            done: true,
          });
+         setTimeout(() => {
+            this.viewData(response.body);
 
-         req
-            .then(response => {
+            setTimeout(() => {
                this.setState({
-                  done: true,
+                  done: false,
+                  uploading: false,
+                  showLoader: false,
                });
-               setTimeout(() => {
-                  this.viewData(response.body);
-                  setTimeout(() => {
-                     this.setState({
-                        done: false,
-                        uploading: false,
-                        showLoader: false,
-                     });
-                  }, 300);
-               }, 300);
-            })
-            .catch(error => {
-               this.setState({ error });
-            });
-      }, 1000);
+            }, 300);
+         }, 300);
+      });
    };
 
    componentDidMount() {
