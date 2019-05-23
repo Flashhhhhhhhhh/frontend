@@ -48,18 +48,12 @@ const AvatarContainer = styled.div`
    width: 32px;
 `;
 
-const Avatar = styled.img``;
-
 class Link extends Component {
    open = () => {
       window.open('https://flashh.gitbook.io/team-flash/', '_blank');
    }
 
    render() {
-      const { apiState } = this.props;
-      const { user } = apiState;
-      const { username } = user;
-
       return (
          <Container onClick={this.open}>
             <AvatarContainer>
