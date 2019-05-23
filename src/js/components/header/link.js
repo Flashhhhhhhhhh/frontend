@@ -59,7 +59,7 @@ class Link extends Component {
             <AvatarContainer>
                <Icon name="book" color="#828d97" size={20}/>
             </AvatarContainer>
-            <Text>GitBook</Text>
+            <Text>Help</Text>
          </Container>
       );
    }
