@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { popView } from '../../views/actions';
 import * as views from '../../views';
 import UserSelect from './user_select';
+import Link from './link'
 
 const Container = styled.div`
    z-index: 1;
@@ -179,6 +180,7 @@ class Header extends Component {
                   !(goingBack && viewStack.length === 2) && viewStack.length > 1
                }
             />
+            <Link />
             <UserSelect />
          </Container>
       );

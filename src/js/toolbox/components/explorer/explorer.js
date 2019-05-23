@@ -143,6 +143,7 @@ const RecursiveExplorer = ({
    };
 
    const prettify = str => {
+      str = str.toLowerCase();
       return str.replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
          return (prep && ' ') + letter.toUpperCase();
       });

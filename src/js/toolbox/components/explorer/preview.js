@@ -50,12 +50,20 @@ const Text = styled.h3`
 `;
 
 const prettify = str => {
-   return str.replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
+   return str.toLowerCase().replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
       return (prep && ' ') + letter.toUpperCase();
    });
 };
-
 class Preview extends Component {
+   getConfidence(val) {
+      switch (val) {
+         case 'MAYBE':
+            return '⚠️ Maybe';
+         default:
+            return '🤮 Idk';
+      }
+   }
+
    render() {
       const { data, path } = this.props;
       const category = prettify(path[path.length - 2]);
@@ -67,13 +75,20 @@ class Preview extends Component {
                <img alt="pupper" src="images/data_icon.svg" />
             </Pupper>
             <TextContainer>
-               <Title>{category}</Title>
-               <Subtitle>Value: <b>{value}</b></Subtitle>
-               <Subtitle><em>From {data[0].source}</em></Subtitle>
+               <Title>{prettify(category)}</Title>
+               <Subtitle>
+                  Value: <b>{value}</b>
+               </Subtitle>
+               <Subtitle>
+                  Confidence:{' '}
+                  <b>{data[0] && (this.getConfidence(data[0].confidence))}</b>
+               </Subtitle>
+               <Subtitle>
+                  <em>From: <b>{data[0].source}</b></em>
+               </Subtitle>
             </TextContainer>
             {data.map(
-               item =>
-                  item && <Text key={item}>{item && item.value}</Text>,
+               item => item && <Text key={item}>{item && item.value}</Text>,
             )}
          </Container>
       );
