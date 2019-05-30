@@ -5,7 +5,7 @@ const port = searchParams.has('port')
    ? parseInt(searchParams.get('port'))
    : 5000;
 
-const apiUrl = `http://ec2-52-87-177-238.compute-1.amazonaws.com:${port}/upload`;
+const apiUrl = `http://ec2-3-83-203-173.compute-1.amazonaws.com:${port}/upload`;
 
 class FileUploader {
    createRequest = () => {
