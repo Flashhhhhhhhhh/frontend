@@ -147,8 +147,8 @@ class PermissionsSelector extends Component {
                   <RadioGroup
                      value={this.state.selectedRadio}
                      radios={[
-                        { label: 'Declassified', value: 'declassified' },
-                        { label: 'Classified', value: 'classified' },
+                        { label: 'Unrestricted', value: 'declassified' },
+                        { label: 'Restricted', value: 'classified' },
                      ]}
                      onChange={({ value }) => this.updateRadio(value)}
                   />

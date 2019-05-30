@@ -75,16 +75,16 @@ class Preview extends Component {
                <img alt="pupper" src="images/data_icon.svg" />
             </Pupper>
             <TextContainer>
-               <Title>{prettify(category)}</Title>
+               <Title>{prettify(value)}</Title>
                <Subtitle>
-                  Value: <b>{value}</b>
+                  Category: <b>{prettify(category)}</b>
                </Subtitle>
                <Subtitle>
                   Confidence:{' '}
                   <b>{data[0] && (this.getConfidence(data[0].confidence))}</b>
                </Subtitle>
                <Subtitle>
-                  <em>From: <b>{data[0].source}</b></em>
+                  <em>Source: <b>{data[0].source}</b></em>
                </Subtitle>
             </TextContainer>
             {data.map(
