@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Button, constants } from '../../toolbox';
 import * as PopupActions from '../../popups/actions';
+import * as ApiActions from '../../api/actions';
+import _ from 'lodash';
 
 const { color, animation } = constants;
 const { scaleInBounce, scaleOutBounce } = animation;
@@ -83,6 +85,13 @@ const ButtonContainer = styled.div`
    }
 `;
 
+const prettify = str => {
+   str = str.toLowerCase();
+   return str.replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
+      return (prep && ' ') + letter.toUpperCase();
+   });
+};
+
 const mapStateToProps = state => ({
    apiState: state.apiState,
 });
@@ -90,16 +99,29 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
    return {
       popPopup: () => dispatch(PopupActions.popPopup()),
+      updateData: data => dispatch(ApiActions.updateData(data)),
    };
 };
 
 class DirDeleter extends Component {
    deleteCategory = () => {
+      const { apiState, name } = this.props;
+      const { data } = apiState;
+
+      let item = _.get(data, [name]);
+
+      if (!(item && item.tag)) {
+         alert("Cannot delete leaf data points!")
+      } else {
+         item.tag[0].deleted = true;
+         this.props.updateData(data);
+      }
+
       this.props.popPopup();
    };
 
    render() {
-      const { index, closing } = this.props;
+      const { index, name, closing } = this.props;
 
       return (
          <Container index={index}>
@@ -107,22 +129,20 @@ class DirDeleter extends Component {
             <Modal closing={closing}>
                <Header>
                   <Emoji>
-                     <span role="img" aria-label="trash">🗑</span>
+                     <span role="img" aria-label="trash">
+                        🗑
+                     </span>
                   </Emoji>
                   <div>
-                     <Title>Delete "Thing"</Title>
+                     <Title>Delete "{prettify(name)}"</Title>
                      <Subtitle>Are you sure?</Subtitle>
                   </div>
                </Header>
                <ButtonContainer>
-                  <Button
-                     design="secondary"
-                     onClick={this.props.popPopup}>
+                  <Button design="secondary" onClick={this.props.popPopup}>
                      Cancel
                   </Button>
-                  <Button
-                     design="primary"
-                     onClick={this.deleteCategory}>
+                  <Button design="primary" onClick={this.deleteCategory}>
                      Delete
                   </Button>
                </ButtonContainer>
@@ -131,7 +151,4 @@ class DirDeleter extends Component {
       );
    }
 }
-export default connect(
-   mapStateToProps,
-   mapDispatchToProps,
-)(DirDeleter);
+export default connect(mapStateToProps, mapDispatchToProps)(DirDeleter);

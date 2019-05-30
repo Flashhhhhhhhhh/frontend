@@ -133,7 +133,7 @@ const RecursiveExplorer = ({
                            data: fullData,
                            leadingPath,
                            trailingPath,
-                           item: name,
+                           name,
                         },
                      }),
                },
@@ -161,9 +161,11 @@ const RecursiveExplorer = ({
                const isSelected = name === leadingPath[0];
                const isLocked =
                   data[name].tag && data[name].tag[0]['sensitive'];
+               const isDeleted =
+                  data[name].tag && data[name].tag[0].deleted;
                const isAdmin = apiState.user.username === 'admin';
 
-               return (
+               return !isDeleted && (
                   name === 'tag' || name === hiddenItem || (
                      <Item
                         key={name}

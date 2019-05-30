@@ -87,6 +87,13 @@ const InputContainer = styled.div`
    margin: 15px 74px 0;
 `;
 
+const prettify = str => {
+   str = str.toLowerCase();
+   return str.replace(/(_|^)([^_]?)/g, function(_, prep, letter) {
+      return (prep && ' ') + letter.toUpperCase();
+   });
+};
+
 const mapStateToProps = state => ({
    apiState: state.apiState,
 });
@@ -144,8 +151,8 @@ class Renamer extends Component {
                      </span>
                   </Emoji>
                   <div>
-                     <Title>Rename Category</Title>
-                     <Subtitle>Enter a name below</Subtitle>
+                     <Title>Rename "{prettify(item)}"</Title>
+                     <Subtitle>Enter a new name below</Subtitle>
                   </div>
                </Header>
                <InputContainer>
@@ -153,7 +160,7 @@ class Renamer extends Component {
                      value={text}
                      onChange={this.updateText}
                      autoFocus
-                     placeholder={item}
+                     placeholder={prettify(item)}
                   />
                   <Button
                      design="primary"
