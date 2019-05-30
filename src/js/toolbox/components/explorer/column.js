@@ -9,7 +9,7 @@ const { color } = constants;
 
 const Container = styled.div`
    z-index: ${props => 100 - props.index};
-   width: 240px;
+   width: ${props => (props.isPreview ? 300 : 240)}px;
    height: 100%;
    flex: 0 0 auto;
    border-right: 1px solid ${color.gray[4]};
@@ -56,10 +56,10 @@ class Column extends Component {
    };
 
    render() {
-      const { showPlus, index } = this.props;
+      const { showPlus, index, isPreview } = this.props;
 
       return (
-         <Container index={index}>
+         <Container index={index} isPreview={isPreview}>
             {this.props.children}
             {showPlus && (
                <PlusButton onClick={this.addDirectory}>

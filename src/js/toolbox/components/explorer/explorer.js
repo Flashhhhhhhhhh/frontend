@@ -63,7 +63,7 @@ const RecursiveExplorer = ({
 }) => {
    if (Array.isArray(data)) {
       return (
-         <Column index={10}>
+         <Column index={10} isPreview>
             <Preview path={trailingPath} data={data} />
          </Column>
       );

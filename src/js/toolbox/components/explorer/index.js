@@ -117,7 +117,7 @@ class ExplorerComponent extends Component {
             left: el.scrollWidth,
             behavior: 'smooth',
          });
-      }, 100);
+      }, 200);
    };
 
    checkForLeaf = path => {
